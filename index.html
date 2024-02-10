@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>QuotGen</title>
+    <title>My Pokedex</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -12,34 +12,40 @@
         <div class="logo">
           <img src="./img/Logo.png" alt="logo" />
         </div>
-        <ul>
-          <li>Home</li>
-          <li>Pokédex</li>
-          <li>Legendaries</li>
+        <ul class="navLinks">
+          <li><a href="#" class="nav-link active">Home</a></li>
+          <li><a href="#" class="nav-link">Pokédex</a></li>
+          <li><a href="#" class="nav-link">Legendaries</a></li>
         </ul>
       </nav>
     </header>
     <div class="hero-section">
       <div class="hero-section__content">
-        <h1>Find all your favorite Pokemon</h1>
-        <p>
+        <div class="head-line">
+          <span>Find</span> all your favorite <span>Pokemon</span>
+        </div>
+        <p class="hero-paragraph">
           You can know the type of Pokemon, its strengths, disadvantages and
           abilities
         </p>
-        <button>See pokemons</button>
+        <button class="hero-section__button">See pokemons</button>
       </div>
       <div class="hero-section__banner">
-        <div class="pokeball1">
-          <img src="./img/Pokeball2.png" alt="team rocket pokeball" />
+        <div class="pikachu">
+          <img src="./img/Pikachu.png" class="pikachu alt="pikachu" />
+        </div>
+        <div class="pokeball2">
+          <img
+            src="./img/Pokeball2.png"
+            class="pokeball2"
+            alt="team rocket pokeball"
+          />
         </div>
         <div class="clouds">
-          <img src="./img/Clouds.png" alt="clouds" />
+          <img src="./img/Clouds.png" class="clouds" alt="clouds" />
         </div>
-        <div class="pokeball">
-          <img src="./img/PokeBall1.png" alt="pokemon half" />
-        </div>
-        <div class="pikachu">
-          <img src="./img/Pikachu.png" alt="pikachu" />
+        <div class="pokeball1">
+          <img src="./img/PokeBall1.png" class="pokeball1 alt="pokemon half" />
         </div>
       </div>
     </div>
