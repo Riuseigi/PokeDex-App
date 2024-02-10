@@ -25,10 +25,11 @@ body{
 
 /* Navigation Area */
 .navigation{
-  display: flex;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
   justify-content: center;
-  column-gap: 40%;
-  padding: 1rem;
+  column-gap: 20%;
+  padding: 20px 4rem;
   box-shadow: 0px 2px 30px rgba(0, 0, 0, 0.1);
   top: 0;
   z-index: 1;
