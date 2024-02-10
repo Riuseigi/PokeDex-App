@@ -55,7 +55,7 @@ body{
 }
 .nav-link.active {
   z-index: 0;
-  border-bottom: 4px solid black; /* Add border bottom for active link */
+  border-bottom: 4px solid #73D677; /* Add border bottom for active link */
 }
 /* Navigation Area */
 
@@ -105,26 +105,52 @@ body{
   position: relative;
   width: 40%;
 }
-.hero-section__banner .pokeball2{
+.hero-section__banner .pokeball2 img{
   z-index: 2;
   left: 90%;
   position: absolute;
+  animation: rotatePokeball 25s linear infinite;
 }
 .hero-section__banner .clouds{
   z-index: 1;
   position: absolute;
   left: 0%;
+  
 }
 .hero-section__banner .pokeball1 img{
   z-index: 3;
   right: 70%;
   position: absolute;
+  animation: rotatePokeball 50s linear infinite;
   
 }
-.hero-section__banner .pikachu{
+.hero-section__banner .pikachu img{
   z-index: 4;
   top: -10%;
   position: absolute;
+  animation: jumpingPika 5s ease-in-out infinite;
 }
 
+/* Animation of each images in banner */
+@keyframes rotatePokeball {
+  0% {
+    transform: rotate(0deg); /* Start rotation angle */
+  }
+  100% {
+    transform: rotate(360deg); /* End rotation angle */
+  }
+}
+@keyframes jumpingPika {
+  0% {
+    transform: translateY(0); /* Start at original position */
+    
+  }
+  50% {
+    transform: translateY(-30px); /* Jump up */
+  }
+  100% {
+    transform: translateY(0); /* Return to original position */
+  }
+}
 
+/* Banner area  */
