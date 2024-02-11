@@ -20,23 +20,27 @@ body{
   width: 100vw;
   position: relative;
   overflow: hidden;
+  
 
 }
 
 /* Navigation Area */
 .navigation{
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  justify-content: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   column-gap: 20%;
   padding: 20px 4rem;
   box-shadow: 0px 2px 30px rgba(0, 0, 0, 0.1);
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1;
 }
 .navLinks{
-    display: flex;
-    column-gap: 25px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     list-style-type: none;
     font-family: 'Karla', sans-serif;
     font-size: 25px;
@@ -60,16 +64,20 @@ body{
 }
 /* Navigation Area */
 
+/* Hero section */
 
-
-/* Hero Section */
 .hero-section{
-  display: flex;
-  column-gap: 5%;
-  padding: 7%;
+  position: relative;
+  top: 20%;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  margin-left: 300px;
+  column-gap: 200px;
+
 }
-.hero-section__content{
-  width: 45%;
+.hero-section__content {
+  max-width: 700px;
+  
 }
 .head-line{
   font-size: var(--h1Size);
@@ -98,13 +106,12 @@ body{
 .hero-section__button:hover{
   background: #87e78b;
 }
-/* Hero Section */
-
 
 /* Banner area  */
 .hero-section__banner{
   position: relative;
-  width: 40%;
+  max-width: 700px;
+  
 }
 .hero-section__banner .pokeball2 img{
   z-index: 2;
@@ -154,12 +161,10 @@ body{
   }
 }
 
-/* Banner area  */
-
 /* Footer Area */
+
 footer {
   text-align: center;
-  background-color: inherit;
   padding: 10px;
   position: fixed;
   bottom: 0;
@@ -169,6 +174,8 @@ footer {
 
 footer span {
   font-weight: bold;
-  
 }
+
+
+
 
