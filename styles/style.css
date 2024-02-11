@@ -219,7 +219,7 @@ footer span {
   .navigation{
     display: grid;
     grid-template-columns: 3fr 1fr;
-    column-gap: 40px;
+    padding: 0;
   }
   .navLinks {
     z-index: 2;
@@ -261,7 +261,8 @@ footer span {
                         "content";
     height: 100px;
     width: 50%;
-    margin: 10px auto;
+    
+    
   }
   .hero-section__banner{
  
@@ -272,7 +273,7 @@ footer span {
   .hero-section {
  
     width: 300px;
-    padding: 20px 20px; /* Adjust padding for mobile devices */
+     /* Adjust padding for mobile devices */
   }
   .hero-section__content{
     grid-area: content;
