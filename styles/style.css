@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Karla&family=Source+Sans+3&display=swap');
-
 :root {
   --bgColor: linear-gradient(180deg, #F5DB13 0%, #F2B807 100%);
   --h1Size: 72px;
@@ -12,35 +11,37 @@
   --karlaFont: 'Karla', sans-serif;
   --soureSansFont: 'Source Sans 3', sans-serif;
 }
-
-body{
+* ,html{
   box-sizing: border-box;
+}
+body{
+  padding: 0;
   background: linear-gradient(180deg, #F5DB13 0%, #F2B807 100%);
-  height: 100vh;
-  width: 100vw;
   position: relative;
-  overflow: hidden;
+  margin: 0;
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
   
-
 }
 
 /* Navigation Area */
 .navigation{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  column-gap: 20%;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  justify-content: center;
   padding: 20px 4rem;
   box-shadow: 0px 2px 30px rgba(0, 0, 0, 0.1);
-  position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
   z-index: 1;
+  background-color: inherit;
+  margin: auto;
+  position: relative;
 }
 .navLinks{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+  z-index: 14;
+    display: flex;
+    column-gap: 25px;
     list-style-type: none;
     font-family: 'Karla', sans-serif;
     font-size: 25px;
@@ -62,25 +63,44 @@ body{
   z-index: 0;
   border-bottom: 4px solid #73D677; /* Add border bottom for active link */
 }
-/* Navigation Area */
+.hamburger {
+  display: none; /* Hide by default */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
 
-/* Hero section */
+.hamburger .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: black;
+  margin: 5px 0;
+  transition: transform 0.3s ease;
+}
 
+
+
+
+
+
+
+/* HERO SECTION  */
 .hero-section{
-  position: relative;
-  top: 20%;
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  margin-left: 300px;
-  column-gap: 200px;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 5%;
+  padding: 2rem;
+  margin: 4rem;
+  min-height: 700px;
+  z-index: 1; 
+  margin: 4rem auto;
+}
 
-}
-.hero-section__content {
-  max-width: 700px;
-  
-}
+/* HERO SECTION  Contents */
+
 .head-line{
-  font-size: var(--h1Size);
+  font-size: 3em;
   font-family: 'Source Sans 3', sans-serif;
   letter-spacing: 5px;
 }
@@ -110,12 +130,13 @@ body{
 /* Banner area  */
 .hero-section__banner{
   position: relative;
-  max-width: 700px;
-  
+  width: initial;
 }
 .hero-section__banner .pokeball2 img{
   z-index: 2;
-  left: 90%;
+  right: 0;
+  width: 250px;
+  height: 250px;
   position: absolute;
   animation: rotatePokeball 25s linear infinite;
 }
@@ -123,11 +144,16 @@ body{
   z-index: 1;
   position: absolute;
   left: 0%;
+  width: 550px;
+  height: 400px;
   
 }
 .hero-section__banner .pokeball1 img{
   z-index: 3;
-  right: 70%;
+  width: 150px;
+  height: 150px;
+  right: 30px;
+  left: 0;
   position: absolute;
   animation: rotatePokeball 50s linear infinite;
   
@@ -135,6 +161,8 @@ body{
 .hero-section__banner .pikachu img{
   z-index: 4;
   top: -10%;
+  width: 550px;
+  height: 550px;
   position: absolute;
   animation: jumpingPika 5s ease-in-out infinite;
 }
@@ -161,21 +189,133 @@ body{
   }
 }
 
-/* Footer Area */
+/* Banner area  */
 
 footer {
+  
   text-align: center;
+  background-color: inherit;
   padding: 10px;
-  position: fixed;
   bottom: 0;
   width: 100%;
+
   font-family: var(--soureSansFont);
+  background-color: var(--bgColor);
 }
 
 footer span {
   font-weight: bold;
+  
 }
+@media all and (max-width: 768px) { 
+  body{
+    overflow: scroll;
+  }
+  .hamburger {
+    z-index: 10;
+    width: 100%;
+    display: block; /* Show for smaller screens */
+  }
+  .navigation{
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    column-gap: 40px;
+  }
+  .navLinks {
+    z-index: 2;
+    display: none; /* Hide navigation links by default */
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 30px; /* Adjust top position based on your header height */
+    left: 0;
+    background: var(--bgColor); /* Adjust background color */
+    width: 100%;
+    padding: 20px;
+    gap:20px;
+    box-shadow: 0px 2px 30px rgba(0, 0, 0, 0.1);
+  }
 
+  .navLinks.active {
+    display: flex;
+  }
 
+  .hamburger.active .bar:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
 
+  .hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+  }
 
+  .hamburger.active .bar:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+  .hero-section{
+    gap: 0;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: "banner"
+                        "content";
+    height: 100px;
+    width: 50%;
+    margin: 10px auto;
+  }
+  .hero-section__banner{
+ 
+    grid-area: banner;
+    margin: 0;
+    padding: 0;
+}
+  .hero-section {
+ 
+    width: 300px;
+    padding: 20px 20px; /* Adjust padding for mobile devices */
+  }
+  .hero-section__content{
+    grid-area: content;
+    text-align: center;
+  }
+  .head-line {
+    font-size: 3rem; /* Adjust font size for smaller screens */
+  }
+
+  .hero-paragraph {
+    font-size: 1rem; /* Adjust font size for smaller screens */
+  }
+
+  .hero-section__button {
+    font-size: 16px; /* Adjust font size for smaller screens */
+    padding: 12px 24px; /* Adjust padding for smaller screens */
+    width:100%;
+  }
+
+  .hero-section__banner{
+    
+  }
+  .hero-section__banner .pokeball2 img{
+    width: 100px;
+    height: 100px;
+    bottom: 30%;
+  }
+  .hero-section__banner .clouds{
+    width: 200px;
+    height: 100px;
+    bottom: 20%;
+    
+  }
+  .hero-section__banner .pokeball1 img{
+    width: 60px;
+    height: 60px;
+    bottom: 50%;
+    
+  }
+  .hero-section__banner .pikachu img{
+    width: 200px;
+    height: 200px;
+    top: 20%;
+    
+  }
+}
