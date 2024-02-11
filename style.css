@@ -155,3 +155,20 @@ body{
 }
 
 /* Banner area  */
+
+/* Footer Area */
+footer {
+  text-align: center;
+  background-color: inherit;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  font-family: var(--soureSansFont);
+}
+
+footer span {
+  font-weight: bold;
+  
+}
+
