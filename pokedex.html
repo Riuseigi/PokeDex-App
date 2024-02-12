@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Pokedex</title>
-    <link rel="stylesheet" href="./styles/style.css" />
+    <link rel="stylesheet" href="./styles/pokedex.css" />
   </head>
   <body>
     <header>
@@ -18,12 +18,64 @@
           <span class="bar"></span>
         </button>
         <ul class="navLinks">
-          <li><a href="index.html" class="nav-link">Home</a></li>
-          <li><a href="#" class="nav-link active">Pokédex</a></li>
+          <li><a href="#" class="nav-link active">Home</a></li>
+          <li><a href="pokedex.html" class="nav-link">Pokédex</a></li>
           <li><a href="#" class="nav-link">Legendaries</a></li>
         </ul>
       </nav>
     </header>
+    <section class="main-content">
+      <h1>1,025 Pokemons for you to choose your favorite</h1>
+      <div class="main-content__search">
+        <form class="filteration">
+          <input type="text" id="searchPokemon" />
+          <label for="pokemon-type">Choose a Pokemon Type:</label>
+          <select id="pokemon-type" name="pokemon-type">
+            <option value="normal">Normal</option>
+            <option value="fire">Fire</option>
+            <option value="water">Water</option>
+            <option value="electric">Electric</option>
+            <option value="grass">Grass</option>
+            <option value="ice">Ice</option>
+            <option value="fighting">Fighting</option>
+            <option value="poison">Poison</option>
+            <option value="ground">Ground</option>
+            <option value="flying">Flying</option>
+            <option value="psychic">Psychic</option>
+            <option value="bug">Bug</option>
+            <option value="rock">Rock</option>
+            <option value="ghost">Ghost</option>
+            <option value="dragon">Dragon</option>
+            <option value="dark">Dark</option>
+            <option value="steel">Steel</option>
+            <option value="fairy">Fairy</option>
+          </select>
+          <button>Search</button>
+        </form>
+      </div>
+      <div class="pokemons-container">
+        <div class="pokemonCard">
+          <div class="info">
+            <h2>Pikachu</h2>
+            <div class="stats">
+              <div class="attack_container">
+                <p>23</p>
+                <p>Attack</p>
+              </div>
+              <div class="defense_container">
+                <p>23</p>
+                <p>Defense</p>
+              </div>
+              <div class="types1">Electric</div>
+              <div class="types2">Normal</div>
+            </div>
+          </div>
+          <div class="pokemon_image">
+            <img src="./img/pikachu_sprite.png" alt="" />
+          </div>
+        </div>
+      </div>
+    </section>
   </body>
   <script src="./scripts/script.js"></script>
 </html>
