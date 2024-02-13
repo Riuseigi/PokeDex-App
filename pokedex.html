@@ -25,9 +25,7 @@
       </nav>
     </header>
     <section class="main-content">
-      <h2 class="head-line">
-        1,025 <span>Pokemons</span> for you to choose your favorite
-      </h2>
+      <h2 class="head-line" id="headlineText"></h2>
       <div class="main-content__search">
         <form class="filteration">
           <input type="text" id="searchPokemon" />
@@ -56,27 +54,24 @@
         </form>
       </div>
       <div class="pokemons-container">
-        <div class="pokemonCard">
+        <div class="pokemonCard" id="pokemonCard">
           <div class="pokemon-info">
             <div class="pokemon-stats">
-              <h2>Pikachu</h2>
+              <h2 id="pokemonName">Pikachu</h2>
 
               <div class="attack_container">
-                <div><p>23</p></div>
+                <div><p id="pokemonAttack">23</p></div>
                 <p>Attack</p>
               </div>
               <div class="defense_container">
-                <div>23</div>
+                <div id="pokemonDefense">23</div>
                 <p>Defense</p>
               </div>
-              <div class="types">
-                <div class="type1">Electric</div>
-                <div class="type2">Normal</div>
-              </div>
+              <div class="types" id="pokemonTypes"></div>
             </div>
           </div>
           <div class="pokemon_image">
-            <img src="./img/pikachu_sprite.png" alt="" />
+            <img src="" alt="pokemon sprite" id="pokemonSprite" />
           </div>
         </div>
       </div>
