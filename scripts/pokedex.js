@@ -1,12 +1,41 @@
+/* This code is adding a click event listener to an element with the class "hamburger". When the
+element is clicked, it toggles the "active" class on both the element with the class "navLinks" and
+the element with the class "hamburger". This is commonly used to create a toggle effect, such as
+opening and closing a navigation menu when clicking on a hamburger icon. */
 document.querySelector('.hamburger').addEventListener('click', function() {
   document.querySelector('.navLinks').classList.toggle('active');
   document.querySelector('.hamburger').classList.toggle('active');
 });
 
+
+/* The `pokemonTypeColors` object is a mapping of Pokémon types to their corresponding color codes.
+Each type is represented as a key-value pair, where the type name is the key and the color code is
+the value. This object is used in the `getPokemonColor` function to determine the background color
+for each Pokémon type displayed on the card. */
+const pokemonTypeColors = {
+  Normal: '#A8A878',
+  Fire: '#F08030',
+  Water: '#6890F0',
+  Electric: '#F8D030',
+  Grass: '#78C850',
+  Ice: '#98D8D8',
+  Fighting: '#C03028',
+  Poison: '#A040A0',
+  Ground: '#E0C068',
+  Flying: '#A890F0',
+  Psychic: '#F85888',
+  Bug: '#A8B820',
+  Rock: '#B8A038',
+  Ghost: '#705898',
+  Dragon: '#7038F8',
+  Dark: '#705848',
+  Steel: '#B8B8D0',
+  Fairy: '#EE99AC'
+};
+
+
+
 const headlineText = document.getElementById("headlineText")
-
-let pokemonCount = null;
-
 
 async function displayHeader(){
   try{
@@ -21,7 +50,14 @@ async function displayHeader(){
 //Call the function
 displayHeader()
 
+
+/**
+ * The function `getPokemonCount` fetches the count of Pokémon from the PokeAPI.
+ * @returns the number of Pokémon count.
+ */
 async function getPokemonCount() {
+  let pokemonCount;
+
   try {
     const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1');
     if (!response.ok) {
@@ -29,18 +65,27 @@ async function getPokemonCount() {
     }
     const data = await response.json();
     pokemonCount = data.count;
-   
-    return  pokemonCount;
+    return pokemonCount;
   } catch (error) {
     console.error('Error fetching Pokémon count:', error);
     throw error;
   }
+  
 }
 
 
 
 
 
+
+
+/**
+ * The function `getPokemonInfo` fetches information about a Pokémon named Registeel from the PokeAPI
+ * and returns an object containing its name, attack and defense stats, types, and front default
+ * sprite.
+ * @returns The function `getPokemonInfo` is returning an object `pokemonData` which contains the
+ * following properties:
+ */
 async function getPokemonInfo() {
   try {
     const response = await fetch('https://pokeapi.co/api/v2/pokemon/registeel');
@@ -48,21 +93,30 @@ async function getPokemonInfo() {
       throw new Error('Network response was not ok.');
     }
     const data = await response.json();
- 
-    const pikachuData = {
+    console.log(data)
+    const pokemonData = {
       name: data.name,
       attack: data.stats.find(stat => stat.stat.name === 'attack').base_stat,
       defense: data.stats.find(stat => stat.stat.name === 'defense').base_stat,
       types: data.types.map(type => type.type.name),
       frontDefaultSprite: data.sprites.front_default
     };
-    return pikachuData;
+    return pokemonData;
   } catch (error) {
     console.error('Error fetching Pikachu info:', error);
     throw error;
   }
 }
 
+
+
+
+
+/**
+ * The function `displayCard` is an asynchronous function that retrieves Pokemon information and
+ * updates the DOM to display the Pokemon's name, attack, defense, sprite, and types.
+ */
+async function displayCard(){
 //Dom initialization
 const pokemonName = document.getElementById("pokemonName");
 const pokemonAttack = document.getElementById("pokemonAttack");
@@ -75,11 +129,6 @@ const pokemonCard = document.getElementById("pokemonCard")
 
 
 pokemonTypes.innerHTML = ""
-
-
-
-async function displayCard(){
-
   try {
     
     const data = await getPokemonInfo();
@@ -87,6 +136,7 @@ async function displayCard(){
     const attack = data.attack;
     const defense = data.defense;
     const spriteUrl = data.frontDefaultSprite;
+    
     pokemonName.textContent = name;
     pokemonAttack.textContent = attack;
     pokemonDefense.textContent = defense;
@@ -114,27 +164,14 @@ displayCard()
 
 
 
-const pokemonTypeColors = {
-  Normal: '#A8A878',
-  Fire: '#F08030',
-  Water: '#6890F0',
-  Electric: '#F8D030',
-  Grass: '#78C850',
-  Ice: '#98D8D8',
-  Fighting: '#C03028',
-  Poison: '#A040A0',
-  Ground: '#E0C068',
-  Flying: '#A890F0',
-  Psychic: '#F85888',
-  Bug: '#A8B820',
-  Rock: '#B8A038',
-  Ghost: '#705898',
-  Dragon: '#7038F8',
-  Dark: '#705848',
-  Steel: '#B8B8D0',
-  Fairy: '#EE99AC'
-};
-
+/**
+ * The function `getPokemonColor` takes a type of Pokemon as input and returns the corresponding color
+ * code.
+ * @param type - The `type` parameter is a string that represents the type of a Pokémon.
+ * @returns a color code in hexadecimal format based on the input type. If the input type matches one
+ * of the known types, the corresponding color code is returned. If the input type is unknown, the
+ * function returns black (#000000).
+ */
 function getPokemonColor(type){
   switch (type.toLowerCase()) {
     case 'normal':
