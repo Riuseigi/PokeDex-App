@@ -176,8 +176,7 @@ body{
 /* Pokemon Card */
 .pokemonCard{
     display: flex;
-    background-color: #F6F7F9;
-    background: linear-gradient(to right, #F6F7F9 59%, rgb(245, 219, 19) 50%);
+    
     max-width: 358px;
     padding: 10px 20px;
     border-radius: 15px;
@@ -254,14 +253,13 @@ body{
     padding: 5px 10px;
     font-weight: bold;
     border-radius: 20px;
+    color: #F2F2F2;
 
 }
 .types .type1{
     background-color: #F2B807;
 }
-.types .type2{
-    background-color: #d1cec6;
-}
+
 .pokemon_image{
     display: flex;
     align-items: center;
