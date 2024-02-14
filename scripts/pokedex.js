@@ -41,8 +41,13 @@ const pokemonTypeColors = {
 
 
 
+/**
+ * The function `displayHeader` asynchronously retrieves the count of Pokemons and displays it in the
+ * headline text.
+ */
 
 async function displayHeader(){
+  const headlineText = document.getElementById("headlineText")
   try{
   const count = await getPokemonCount()
  
@@ -53,46 +58,58 @@ async function displayHeader(){
   }
 }
 //Call the function
-displayHeader()
+displayHeader();
 
 
-
-const headlineText = document.getElementById("headlineText")
+//Initialization
 const pokemonPerPage = 30;
 let currentPage = 1;
 
-const fetchAndDisplayPokemons = async (page) => {
-    try {
-        const startIndex = (page - 1) * pokemonPerPage + 1;
-        const endIndex = startIndex + pokemonPerPage - 1;
-
-        for (let i = startIndex; i <= endIndex; i++) {
-            await getPokemonInfo(i);
-        }
-    } catch (error) {
-        console.error('Error fetching and displaying pokemons:', error);
+/**
+ * The function fetches and displays a range of pokemons based on the given page number.
+ * @param page - The page parameter represents the page number of the pokemons to fetch and display.
+ */
+async function fetchAndDisplayPokemons(page){
+  try {
+    const startIndex = (page - 1) * pokemonPerPage + 1;
+    const endIndex = startIndex + pokemonPerPage - 1;
+    console.log(startIndex)
+    console.log(endIndex)
+    for (let i = startIndex; i <= endIndex; i++) {
+        await getPokemonInfo(i);
     }
-};
+} catch (error) {
+    console.error('Error fetching and displaying pokemons:', error);
+}
+}
 
-const loadMorePokemons = async () => {
-    currentPage++;
+
+/**
+ * The function `loadMorePokemons` increments the `currentPage` variable and then calls the
+ * `fetchAndDisplayPokemons` function.
+ */
+async function loadMorePokemons(){
+  currentPage++;
+  await fetchAndDisplayPokemons(currentPage);
+}
+
+/**
+ * The function `initializePokedex` initializes the Pokédex by fetching and displaying Pokémon data,
+ * and setting up a click event listener for a "Load More" button.
+ */
+async function initializePokedex(){
+  try {
+    // const count = await getPokemonCount();
+    // const totalPages = Math.ceil(count / pokemonPerPage);
+    // console.log(totalPages)
     await fetchAndDisplayPokemons(currentPage);
-};
-
-const initializePokedex = async () => {
-    try {
-        const count = await getPokemonCount();
-        // const totalPages = Math.ceil(count / pokemonPerPage);
-        // console.log(totalPages)
-        await fetchAndDisplayPokemons(currentPage);
-        
-        const loadMoreBtn = document.getElementById('loadMoreBtn');
-        loadMoreBtn.addEventListener('click', loadMorePokemons);
-    } catch (error) {
-        console.error('Error initializing Pokédex:', error);
-    }
-};
-
+    
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    loadMoreBtn.addEventListener('click', loadMorePokemons);
+} catch (error) {
+    console.error('Error initializing Pokédex:', error);
+}
+}
 initializePokedex();
 
 
@@ -150,7 +167,7 @@ async function getPokemonInfo(id) {
       types: data.types.map(type => type.type.name),
       frontDefaultSprite: data.sprites.other['official-artwork'].front_default
     };
-    seeData(pokemonData);
+    displayCard(pokemonData);
   } catch (error) {
     console.error('Error fetching Pokemon info:', error);
     throw error;
@@ -158,13 +175,14 @@ async function getPokemonInfo(id) {
 }
 
 
-async function seeData(pokemonData){
-    displayCard(pokemonData)
-}
+
 
 /**
- * The function `displayCard` is an asynchronous function that retrieves Pokemon information and
- * updates the DOM to display the Pokemon's name, attack, defense, sprite, and types.
+ * The function `displayCard` creates and displays a Pokemon card with information such as name,
+ * attack, defense, sprite, and types.
+ * @param pokemonData - The `pokemonData` parameter is an object that contains information about a
+ * specific Pokemon. It includes properties such as `name`, `attack`, `defense`, `frontDefaultSprite`,
+ * and `types`.
  */
 async function displayCard(pokemonData){
    
@@ -183,7 +201,7 @@ async function displayCard(pokemonData){
       type.classList.add("type1")
       const color = getPokemonColor(element)
       type.style.backgroundColor = color;
-      return `<div class="type1" style="background-color:${color};">${element}</div>`
+      return `<div class="type" style="background-color:${color};">${element}</div>`
   });
     const pokemonCardInnerHTML= ` <div class="pokemon-info">
     <div class="pokemon-stats">
@@ -211,10 +229,6 @@ async function displayCard(pokemonData){
     
     AOS.init();
    
-    // pokemonName.textContent = name;
-    // pokemonAttack.textContent = attack;
-    // pokemonDefense.textContent = defense;
-    // pokemonSprite.src = spriteUrl;
     const firstType = pokemonData.types[0]; // Assuming types is an array of type strings
     const backgroundColor = getPokemonColor(firstType);
     pokemonCard.style.background = `linear-gradient(to right, #F6F7F9 59%, ${backgroundColor} 50%)`;
