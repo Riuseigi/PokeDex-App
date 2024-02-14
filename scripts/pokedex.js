@@ -60,6 +60,7 @@ displayHeader()
 const headlineText = document.getElementById("headlineText")
 const pokemonPerPage = 30;
 let currentPage = 1;
+
 const fetchAndDisplayPokemons = async (page) => {
     try {
         const startIndex = (page - 1) * pokemonPerPage + 1;
@@ -81,8 +82,8 @@ const loadMorePokemons = async () => {
 const initializePokedex = async () => {
     try {
         const count = await getPokemonCount();
-        const totalPages = Math.ceil(count / pokemonPerPage);
-        console.log(totalPages)
+        // const totalPages = Math.ceil(count / pokemonPerPage);
+        // console.log(totalPages)
         await fetchAndDisplayPokemons(currentPage);
         
         const loadMoreBtn = document.getElementById('loadMoreBtn');
