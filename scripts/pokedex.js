@@ -1,3 +1,9 @@
+const pokemonContainer = document.getElementById("pokemonContainer");
+const pokemonCount = 150;
+
+
+
+
 /* This code is adding a click event listener to an element with the class "hamburger". When the
 element is clicked, it toggles the "active" class on both the element with the class "navLinks" and
 the element with the class "hamburger". This is commonly used to create a toggle effect, such as
@@ -73,9 +79,20 @@ async function getPokemonCount() {
   
 }
 
+const fetchPokemons = async () => {
+  try {
+    for(let i = 1; i <= pokemonCount; i++) {
+     
+      await getPokemonInfo(i)
+      seeData(i)
+  }
+  } catch (error) {
+    
+  }
+ 
+}
 
-
-
+fetchPokemons()
 
 
 
@@ -86,14 +103,15 @@ async function getPokemonCount() {
  * @returns The function `getPokemonInfo` is returning an object `pokemonData` which contains the
  * following properties:
  */
-async function getPokemonInfo() {
+async function getPokemonInfo(id) {
   try {
-    const response = await fetch('https://pokeapi.co/api/v2/pokemon/registeel');
+    const url = `https://pokeapi.co/api/v2/pokemon/${id}`
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error('Network response was not ok.');
     }
     const data = await response.json();
-    console.log(data)
+    
     const pokemonData = {
       name: data.name,
       attack: data.stats.find(stat => stat.stat.name === 'attack').base_stat,
@@ -101,62 +119,89 @@ async function getPokemonInfo() {
       types: data.types.map(type => type.type.name),
       frontDefaultSprite: data.sprites.other['official-artwork'].front_default
     };
-    return pokemonData;
+    seeData(pokemonData);
   } catch (error) {
-    console.error('Error fetching Pikachu info:', error);
+    console.error('Error fetching Pokemon info:', error);
     throw error;
   }
 }
 
 
-
-
+async function seeData(pokemonData){
+ 
+  
+    displayCard(pokemonData)
+}
 
 /**
  * The function `displayCard` is an asynchronous function that retrieves Pokemon information and
  * updates the DOM to display the Pokemon's name, attack, defense, sprite, and types.
  */
-async function displayCard(){
+async function displayCard(pokemonData){
+  
 //Dom initialization
-const pokemonName = document.getElementById("pokemonName");
-const pokemonAttack = document.getElementById("pokemonAttack");
-const pokemonDefense = document.getElementById("pokemonDefense");
-const type1 = document.getElementById("type1");
-const pokemonSprite = document.getElementById("pokemonSprite");
-const pokemonTypes = document.getElementById("pokemonTypes");
+// const pokemonName = document.getElementById("pokemonName");
+// const pokemonAttack = document.getElementById("pokemonAttack");
+// const pokemonDefense = document.getElementById("pokemonDefense");
 
-const pokemonCard = document.getElementById("pokemonCard")
+// const pokemonSprite = document.getElementById("pokemonSprite");
+// const pokemonTypes = document.getElementById("pokemonTypes");
+
+// const pokemonCard = document.getElementById("pokemonCard")
 
 
-pokemonTypes.innerHTML = ""
+    
   try {
     
-    const data = await getPokemonInfo();
-    const name = data.name.charAt(0).toUpperCase() + data.name.slice(1);
-    const attack = data.attack;
-    const defense = data.defense;
-    const spriteUrl = data.frontDefaultSprite;
-    
-    pokemonName.textContent = name;
-    pokemonAttack.textContent = attack;
-    pokemonDefense.textContent = defense;
-    pokemonSprite.src = spriteUrl;
-    const firstType = data.types[0]; // Assuming types is an array of type strings
+    const pokemonCard = document.createElement('div')
+    pokemonCard.classList.add("pokemonCard")
+   
+    const name = pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1);
+    const attack = pokemonData.attack;
+    const defense = pokemonData.defense;
+    const spriteUrl = pokemonData.frontDefaultSprite;
+    const typesDiv = pokemonData.types.map((element) => {
+      const type = document.createElement("div")
+      type.textContent = element;
+      type.classList.add("type1")
+      const color = getPokemonColor(element)
+      type.style.backgroundColor = color;
+      return `<div class="type1" style="background-color:${color};">${element}</div>`
+  });
+    const pokemonCardInnerHTML= ` <div class="pokemon-info">
+    <div class="pokemon-stats">
+      <h2 id="pokemonName">${name}</h2>
+
+      <div class="attack_container">
+        <div><p id="pokemonAttack">${attack}</p></div>
+        <p>Attack</p>
+      </div>
+      <div class="defense_container">
+        <div id="pokemonDefense">${defense}</div>
+        <p>Defense</p>
+      </div>
+      <div class="types" id="pokemonTypes">
+      ${typesDiv}
+      </div>
+    </div>
+    </div>
+    <div class="pokemon_image">
+    <img src="${spriteUrl}" alt="pokemon sprite" id="pokemonSprite" />
+    </div>`
+
+    pokemonCard.innerHTML  = pokemonCardInnerHTML
+    // pokemonName.textContent = name;
+    // pokemonAttack.textContent = attack;
+    // pokemonDefense.textContent = defense;
+    // pokemonSprite.src = spriteUrl;
+    const firstType = pokemonData.types[0]; // Assuming types is an array of type strings
     const backgroundColor = getPokemonColor(firstType);
     pokemonCard.style.background = `linear-gradient(to right, #F6F7F9 59%, ${backgroundColor} 50%)`;
-    data.types.forEach((element) => {
-        const type = document.createElement("div")
-        type.textContent = element;
-        type.classList.add("type1")
-        const color = getPokemonColor(element)
-        type.style.backgroundColor = color;
-        
-        pokemonTypes.appendChild(type);
-    })
     
+    pokemonContainer.appendChild(pokemonCard)
     
   } catch (error) {
-    
+      console.error(`Can fetch the Data :${error}`)
   }
 }
 displayCard()

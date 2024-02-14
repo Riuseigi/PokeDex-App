@@ -167,8 +167,14 @@ body{
 /* Main section area */
 .main-content{}
 .pokemons-container{
-    display: grid;
-    padding: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    grid-template-columns: repeat(4,1fr);
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 1rem;
+    gap: 15px;
+    justify-content: center;
 }
 
 
