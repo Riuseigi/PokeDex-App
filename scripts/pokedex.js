@@ -1,5 +1,5 @@
 const pokemonContainer = document.getElementById("pokemonContainer");
-const pokemonCount = 150;
+
 
 
 
@@ -41,7 +41,6 @@ const pokemonTypeColors = {
 
 
 
-const headlineText = document.getElementById("headlineText")
 
 async function displayHeader(){
   try{
@@ -55,6 +54,54 @@ async function displayHeader(){
 }
 //Call the function
 displayHeader()
+
+
+
+const headlineText = document.getElementById("headlineText")
+const pokemonPerPage = 30;
+let currentPage = 1;
+const fetchAndDisplayPokemons = async (page) => {
+    try {
+        const startIndex = (page - 1) * pokemonPerPage + 1;
+        const endIndex = startIndex + pokemonPerPage - 1;
+
+        for (let i = startIndex; i <= endIndex; i++) {
+            await getPokemonInfo(i);
+        }
+    } catch (error) {
+        console.error('Error fetching and displaying pokemons:', error);
+    }
+};
+
+const loadMorePokemons = async () => {
+    currentPage++;
+    await fetchAndDisplayPokemons(currentPage);
+};
+
+const initializePokedex = async () => {
+    try {
+        const count = await getPokemonCount();
+        const totalPages = Math.ceil(count / pokemonPerPage);
+        console.log(totalPages)
+        await fetchAndDisplayPokemons(currentPage);
+        
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        loadMoreBtn.addEventListener('click', loadMorePokemons);
+    } catch (error) {
+        console.error('Error initializing Pokédex:', error);
+    }
+};
+
+initializePokedex();
+
+
+
+
+
+
+
+
+
 
 
 /**
@@ -78,23 +125,6 @@ async function getPokemonCount() {
   }
   
 }
-
-const fetchPokemons = async () => {
-  try {
-    for(let i = 1; i <= pokemonCount; i++) {
-     
-      await getPokemonInfo(i)
-      seeData(i)
-  }
-  } catch (error) {
-    
-  }
- 
-}
-
-fetchPokemons()
-
-
 
 /**
  * The function `getPokemonInfo` fetches information about a Pokémon named Registeel from the PokeAPI
@@ -128,8 +158,6 @@ async function getPokemonInfo(id) {
 
 
 async function seeData(pokemonData){
- 
-  
     displayCard(pokemonData)
 }
 
@@ -138,25 +166,13 @@ async function seeData(pokemonData){
  * updates the DOM to display the Pokemon's name, attack, defense, sprite, and types.
  */
 async function displayCard(pokemonData){
-  
-//Dom initialization
-// const pokemonName = document.getElementById("pokemonName");
-// const pokemonAttack = document.getElementById("pokemonAttack");
-// const pokemonDefense = document.getElementById("pokemonDefense");
-
-// const pokemonSprite = document.getElementById("pokemonSprite");
-// const pokemonTypes = document.getElementById("pokemonTypes");
-
-// const pokemonCard = document.getElementById("pokemonCard")
-
-
-    
+   
   try {
     
     const pokemonCard = document.createElement('div')
     pokemonCard.classList.add("pokemonCard")
    
-    const name = pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1);
+    const pokemonName = pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1);
     const attack = pokemonData.attack;
     const defense = pokemonData.defense;
     const spriteUrl = pokemonData.frontDefaultSprite;
@@ -170,7 +186,7 @@ async function displayCard(pokemonData){
   });
     const pokemonCardInnerHTML= ` <div class="pokemon-info">
     <div class="pokemon-stats">
-      <h2 id="pokemonName">${name}</h2>
+      <h2 id="pokemonName">${pokemonName}</h2>
 
       <div class="attack_container">
         <div><p id="pokemonAttack">${attack}</p></div>
@@ -189,7 +205,11 @@ async function displayCard(pokemonData){
     <img src="${spriteUrl}" alt="pokemon sprite" id="pokemonSprite" />
     </div>`
 
-    pokemonCard.innerHTML  = pokemonCardInnerHTML
+    pokemonCard.innerHTML  = pokemonCardInnerHTML;
+    pokemonCard.setAttribute("data-aos","fade-up");
+    
+    AOS.init();
+   
     // pokemonName.textContent = name;
     // pokemonAttack.textContent = attack;
     // pokemonDefense.textContent = defense;
@@ -204,7 +224,6 @@ async function displayCard(pokemonData){
       console.error(`Can fetch the Data :${error}`)
   }
 }
-displayCard()
 
 
 
@@ -259,3 +278,7 @@ function getPokemonColor(type){
       return '#000000'; // Return black for unknown types
   }
 }
+
+
+
+
