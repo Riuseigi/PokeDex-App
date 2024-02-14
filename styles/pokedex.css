@@ -167,8 +167,15 @@ body{
 /* Main section area */
 .main-content{}
 .pokemons-container{
-    display: grid;
-    padding: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 1rem;
+    gap: 15px;
+    justify-content: center;
+    scroll-behavior: smooth; /* Smooth scrolling behavior */
+
 }
 
 
@@ -256,7 +263,7 @@ body{
     color: #F2F2F2;
 
 }
-.types .type1{
+.types .type{
     background-color: #F2B807;
 }
 
@@ -269,6 +276,32 @@ body{
     height: 200px;
     width: 200px;
 }
+
+
+
+/* Pagination Area */
+.load-more-btn {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background: #73D677;
+  box-shadow: inset 0px -3px 0px rgba(0, 0, 0, 0.18);
+  border-radius: 11px;
+  font-size: 1rem;
+  padding: .5em 1em;
+  border: none;
+  font-family: var(--karlaFont);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  color: white;
+}
+.load-more-btn:hover {
+  background-color: #0056b3;
+}
+
+
+
 @media all and (max-width: 768px){
     .hamburger {
         z-index: 10;

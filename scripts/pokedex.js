@@ -1,3 +1,9 @@
+const pokemonContainer = document.getElementById("pokemonContainer");
+
+
+
+
+
 /* This code is adding a click event listener to an element with the class "hamburger". When the
 element is clicked, it toggles the "active" class on both the element with the class "navLinks" and
 the element with the class "hamburger". This is commonly used to create a toggle effect, such as
@@ -35,9 +41,13 @@ const pokemonTypeColors = {
 
 
 
-const headlineText = document.getElementById("headlineText")
+/**
+ * The function `displayHeader` asynchronously retrieves the count of Pokemons and displays it in the
+ * headline text.
+ */
 
 async function displayHeader(){
+  const headlineText = document.getElementById("headlineText")
   try{
   const count = await getPokemonCount()
  
@@ -48,7 +58,68 @@ async function displayHeader(){
   }
 }
 //Call the function
-displayHeader()
+displayHeader();
+
+
+//Initialization
+const pokemonPerPage = 30;
+let currentPage = 1;
+
+/**
+ * The function fetches and displays a range of pokemons based on the given page number.
+ * @param page - The page parameter represents the page number of the pokemons to fetch and display.
+ */
+async function fetchAndDisplayPokemons(page){
+  try {
+    const startIndex = (page - 1) * pokemonPerPage + 1;
+    const endIndex = startIndex + pokemonPerPage - 1;
+    console.log(startIndex)
+    console.log(endIndex)
+    for (let i = startIndex; i <= endIndex; i++) {
+        await getPokemonInfo(i);
+    }
+} catch (error) {
+    console.error('Error fetching and displaying pokemons:', error);
+}
+}
+
+
+/**
+ * The function `loadMorePokemons` increments the `currentPage` variable and then calls the
+ * `fetchAndDisplayPokemons` function.
+ */
+async function loadMorePokemons(){
+  currentPage++;
+  await fetchAndDisplayPokemons(currentPage);
+}
+
+/**
+ * The function `initializePokedex` initializes the Pokédex by fetching and displaying Pokémon data,
+ * and setting up a click event listener for a "Load More" button.
+ */
+async function initializePokedex(){
+  try {
+    // const count = await getPokemonCount();
+    // const totalPages = Math.ceil(count / pokemonPerPage);
+    // console.log(totalPages)
+    await fetchAndDisplayPokemons(currentPage);
+    
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    loadMoreBtn.addEventListener('click', loadMorePokemons);
+} catch (error) {
+    console.error('Error initializing Pokédex:', error);
+}
+}
+initializePokedex();
+
+
+
+
+
+
+
+
+
 
 
 /**
@@ -73,12 +144,6 @@ async function getPokemonCount() {
   
 }
 
-
-
-
-
-
-
 /**
  * The function `getPokemonInfo` fetches information about a Pokémon named Registeel from the PokeAPI
  * and returns an object containing its name, attack and defense stats, types, and front default
@@ -86,14 +151,15 @@ async function getPokemonCount() {
  * @returns The function `getPokemonInfo` is returning an object `pokemonData` which contains the
  * following properties:
  */
-async function getPokemonInfo() {
+async function getPokemonInfo(id) {
   try {
-    const response = await fetch('https://pokeapi.co/api/v2/pokemon/registeel');
+    const url = `https://pokeapi.co/api/v2/pokemon/${id}`
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error('Network response was not ok.');
     }
     const data = await response.json();
-    console.log(data)
+    
     const pokemonData = {
       name: data.name,
       attack: data.stats.find(stat => stat.stat.name === 'attack').base_stat,
@@ -101,9 +167,9 @@ async function getPokemonInfo() {
       types: data.types.map(type => type.type.name),
       frontDefaultSprite: data.sprites.other['official-artwork'].front_default
     };
-    return pokemonData;
+    displayCard(pokemonData);
   } catch (error) {
-    console.error('Error fetching Pikachu info:', error);
+    console.error('Error fetching Pokemon info:', error);
     throw error;
   }
 }
@@ -111,55 +177,68 @@ async function getPokemonInfo() {
 
 
 
-
 /**
- * The function `displayCard` is an asynchronous function that retrieves Pokemon information and
- * updates the DOM to display the Pokemon's name, attack, defense, sprite, and types.
+ * The function `displayCard` creates and displays a Pokemon card with information such as name,
+ * attack, defense, sprite, and types.
+ * @param pokemonData - The `pokemonData` parameter is an object that contains information about a
+ * specific Pokemon. It includes properties such as `name`, `attack`, `defense`, `frontDefaultSprite`,
+ * and `types`.
  */
-async function displayCard(){
-//Dom initialization
-const pokemonName = document.getElementById("pokemonName");
-const pokemonAttack = document.getElementById("pokemonAttack");
-const pokemonDefense = document.getElementById("pokemonDefense");
-const type1 = document.getElementById("type1");
-const pokemonSprite = document.getElementById("pokemonSprite");
-const pokemonTypes = document.getElementById("pokemonTypes");
-
-const pokemonCard = document.getElementById("pokemonCard")
-
-
-pokemonTypes.innerHTML = ""
+async function displayCard(pokemonData){
+   
   try {
     
-    const data = await getPokemonInfo();
-    const name = data.name.charAt(0).toUpperCase() + data.name.slice(1);
-    const attack = data.attack;
-    const defense = data.defense;
-    const spriteUrl = data.frontDefaultSprite;
+    const pokemonCard = document.createElement('div')
+    pokemonCard.classList.add("pokemonCard")
+   
+    const pokemonName = pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1);
+    const attack = pokemonData.attack;
+    const defense = pokemonData.defense;
+    const spriteUrl = pokemonData.frontDefaultSprite;
+    const typesDiv = pokemonData.types.map((element) => {
+      const type = document.createElement("div")
+      type.textContent = element;
+      type.classList.add("type1")
+      const color = getPokemonColor(element)
+      type.style.backgroundColor = color;
+      return `<div class="type" style="background-color:${color};">${element}</div>`
+  });
+    const pokemonCardInnerHTML= ` <div class="pokemon-info">
+    <div class="pokemon-stats">
+      <h2 id="pokemonName">${pokemonName}</h2>
+
+      <div class="attack_container">
+        <div><p id="pokemonAttack">${attack}</p></div>
+        <p>Attack</p>
+      </div>
+      <div class="defense_container">
+        <div id="pokemonDefense">${defense}</div>
+        <p>Defense</p>
+      </div>
+      <div class="types" id="pokemonTypes">
+      ${typesDiv}
+      </div>
+    </div>
+    </div>
+    <div class="pokemon_image">
+    <img src="${spriteUrl}" alt="pokemon sprite" id="pokemonSprite" />
+    </div>`
+
+    pokemonCard.innerHTML  = pokemonCardInnerHTML;
+    pokemonCard.setAttribute("data-aos","fade-up");
     
-    pokemonName.textContent = name;
-    pokemonAttack.textContent = attack;
-    pokemonDefense.textContent = defense;
-    pokemonSprite.src = spriteUrl;
-    const firstType = data.types[0]; // Assuming types is an array of type strings
+    AOS.init();
+   
+    const firstType = pokemonData.types[0]; // Assuming types is an array of type strings
     const backgroundColor = getPokemonColor(firstType);
     pokemonCard.style.background = `linear-gradient(to right, #F6F7F9 59%, ${backgroundColor} 50%)`;
-    data.types.forEach((element) => {
-        const type = document.createElement("div")
-        type.textContent = element;
-        type.classList.add("type1")
-        const color = getPokemonColor(element)
-        type.style.backgroundColor = color;
-        
-        pokemonTypes.appendChild(type);
-    })
     
+    pokemonContainer.appendChild(pokemonCard)
     
   } catch (error) {
-    
+      console.error(`Can fetch the Data :${error}`)
   }
 }
-displayCard()
 
 
 
@@ -214,3 +293,7 @@ function getPokemonColor(type){
       return '#000000'; // Return black for unknown types
   }
 }
+
+
+
+
