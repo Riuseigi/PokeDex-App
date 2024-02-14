@@ -99,7 +99,7 @@ async function getPokemonInfo() {
       attack: data.stats.find(stat => stat.stat.name === 'attack').base_stat,
       defense: data.stats.find(stat => stat.stat.name === 'defense').base_stat,
       types: data.types.map(type => type.type.name),
-      frontDefaultSprite: data.sprites.front_default
+      frontDefaultSprite: data.sprites.other['official-artwork'].front_default
     };
     return pokemonData;
   } catch (error) {
