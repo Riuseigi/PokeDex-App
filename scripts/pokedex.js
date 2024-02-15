@@ -54,8 +54,8 @@ async function displayHeader(){
   headlineText.textContent= `${count.toLocaleString()} Pokemons for you to choose your favorite`
   }
   catch(error){
-    console.error(error);
-    displayErrorImage()
+    console.error(error)
+    
   }
 }
 //Call the function
@@ -80,7 +80,7 @@ async function fetchAndDisplayPokemons(page){
         await getPokemonInfo(i);
     }
 } catch (error) {
-  displayErrorImage()
+  
     console.error('Error fetching and displaying pokemons:', error);
 }
 }
@@ -110,7 +110,7 @@ async function initializePokedex(){
     loadMoreBtn.addEventListener('click', loadMorePokemons);
 } catch (error) {
     console.error('Error initializing Pokédex:', error);
-    displayErrorImage()
+    
 }
 }
 initializePokedex();
@@ -142,7 +142,7 @@ async function getPokemonCount() {
     return pokemonCount;
   } catch (error) {
     console.error('Error fetching Pokémon count:', error);
-    displayErrorImage()
+    
     throw error;
    
   }
@@ -198,8 +198,9 @@ async function displayCard(pokemonData){
     
     const pokemonCard = document.createElement('div')
     pokemonCard.classList.add("pokemonCard")
-   
+    console.log(pokemonData.name)
     const pokemonName = pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1);
+    
     const attack = pokemonData.attack;
     const defense = pokemonData.defense;
     const spriteUrl = pokemonData.frontDefaultSprite;
@@ -247,7 +248,7 @@ async function displayCard(pokemonData){
     
   } catch (error) {
       console.error(`Can fetch the Data :${error}`)
-      displayErrorImage()
+      
 
   }
 }
@@ -323,14 +324,15 @@ filterationForm.addEventListener("submit", async (event) => {
     try {
       
       const pokemon = searchPokemon.value.toLowerCase()
-
+      const pokemonName = await getPokemonInfo(pokemon)
       if(pokemon ===""){
         pokemonContainer.innerHTML = `<img src="./img/teamRocket.png" alt="" class="errorImage">
         `
         loadMoreBtn.style.display = "none";
       } else{
         
-      const pokemonName = await getPokemonInfo(pokemon)
+      
+      
       displayCard(pokemonName)
       
   
@@ -340,7 +342,7 @@ filterationForm.addEventListener("submit", async (event) => {
     
     } catch (error) {
       console.error(error)
-      displayErrorImage()
+ 
       
     }
   
