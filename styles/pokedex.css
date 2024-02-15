@@ -277,9 +277,14 @@ body{
     width: 200px;
 }
 
+/* Error image */
+.errorImage{
+  display: flex;
+  min-width: 400px;
+  border-radius: 25px;
+}
 
-
-/* Pagination Area */
+/* Load more btn*/
 .load-more-btn {
   display: block;
   margin: 20px auto;

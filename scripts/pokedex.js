@@ -184,6 +184,7 @@ async function getPokemonInfo(id) {
  * specific Pokemon. It includes properties such as `name`, `attack`, `defense`, `frontDefaultSprite`,
  * and `types`.
  */
+const pokemonCard = document.createElement('div')
 async function displayCard(pokemonData){
    
   try {
@@ -296,4 +297,40 @@ function getPokemonColor(type){
 
 
 
+
+// Search Pokemon
+
+const searchPokemon = document.querySelector("#searchPokemon")
+
+const filterationForm = document.querySelector(".filteration")
+const errorImage = document.querySelector(".errorImage")
+
+filterationForm.addEventListener("submit", async (event) => {
+    event.preventDefault()
+    pokemonContainer.innerHTML = "";
+    
+    try {
+      
+      const pokemon = searchPokemon.value.toLowerCase()
+
+      if(pokemon ===""){
+        pokemonContainer.innerHTML = `<img src="./img/teamRocket.png" alt="" class="errorImage">
+        `
+        loadMoreBtn.style.display = "none";
+      } else{
+        
+      const pokemonName = await getPokemonInfo(pokemon)
+      displayCard(pokemonName)
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+  
+      loadMoreBtn.style.display = "none"
+      }
+      
+    
+    } catch (error) {
+      console.error(error)
+      
+    }
+  
+})
 
