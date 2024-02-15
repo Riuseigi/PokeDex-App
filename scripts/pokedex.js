@@ -1,5 +1,5 @@
 const pokemonContainer = document.getElementById("pokemonContainer");
-
+let hasError = false
 
 
 
@@ -54,7 +54,8 @@ async function displayHeader(){
   headlineText.textContent= `${count.toLocaleString()} Pokemons for you to choose your favorite`
   }
   catch(error){
-    console.error(error)
+    console.error(error);
+    displayErrorImage()
   }
 }
 //Call the function
@@ -79,6 +80,7 @@ async function fetchAndDisplayPokemons(page){
         await getPokemonInfo(i);
     }
 } catch (error) {
+  displayErrorImage()
     console.error('Error fetching and displaying pokemons:', error);
 }
 }
@@ -108,6 +110,7 @@ async function initializePokedex(){
     loadMoreBtn.addEventListener('click', loadMorePokemons);
 } catch (error) {
     console.error('Error initializing Pokédex:', error);
+    displayErrorImage()
 }
 }
 initializePokedex();
@@ -139,7 +142,9 @@ async function getPokemonCount() {
     return pokemonCount;
   } catch (error) {
     console.error('Error fetching Pokémon count:', error);
+    displayErrorImage()
     throw error;
+   
   }
   
 }
@@ -169,8 +174,10 @@ async function getPokemonInfo(id) {
     };
     displayCard(pokemonData);
   } catch (error) {
+    displayErrorImage()
     console.error('Error fetching Pokemon info:', error);
     throw error;
+    
   }
 }
 
@@ -203,7 +210,9 @@ async function displayCard(pokemonData){
       const color = getPokemonColor(element)
       type.style.backgroundColor = color;
       return `<div class="type" style="background-color:${color};">${element}</div>`
-  });
+  }).join(" ");
+
+
     const pokemonCardInnerHTML= ` <div class="pokemon-info">
     <div class="pokemon-stats">
       <h2 id="pokemonName">${pokemonName}</h2>
@@ -238,6 +247,8 @@ async function displayCard(pokemonData){
     
   } catch (error) {
       console.error(`Can fetch the Data :${error}`)
+      displayErrorImage()
+
   }
 }
 
@@ -321,7 +332,7 @@ filterationForm.addEventListener("submit", async (event) => {
         
       const pokemonName = await getPokemonInfo(pokemon)
       displayCard(pokemonName)
-      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      
   
       loadMoreBtn.style.display = "none"
       }
@@ -329,8 +340,16 @@ filterationForm.addEventListener("submit", async (event) => {
     
     } catch (error) {
       console.error(error)
+      displayErrorImage()
       
     }
   
 })
 
+
+const loadMoreBtn = document.getElementById('loadMoreBtn');
+displayErrorImage =() => {
+ pokemonContainer.innerHTML = `<img src="./img/teamRocket.png" alt="" class="errorImage">
+  `
+  loadMoreBtn.style.display = "none";
+}
