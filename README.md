@@ -12,7 +12,7 @@ It showcases a list of all Pokemon, neatly organized for easy browsing.
    - create a Category of pokemon types
 
 2. **Scripting and Functionality**
-   -Collect Pokemon data: Decide which generation(s) of Pokemon you want to include and gather necessary information (name, type, image, etc.). Sources like PokeAPI are helpful.
+   -Collect Pokemon data: Decide which type of Pokemon you want to include and gather necessary information (name, type, image, etc.). Sources like PokeAPI are helpful.
    - Implement basic information: Show Pokemon names, types, and possibly images on each entry.
    - Add search functionality: Allow users to easily find specific Pokemon.
    - Utilize DOM manipulation techniques to dynamically update the content.
