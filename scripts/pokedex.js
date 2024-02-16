@@ -74,11 +74,12 @@ async function fetchAndDisplayPokemons(page){
   try {
     const startIndex = (page - 1) * pokemonPerPage + 1;
     const endIndex = startIndex + pokemonPerPage - 1;
-    console.log(startIndex)
-    console.log(endIndex)
+   
+    const promises = [];
     for (let i = startIndex; i <= endIndex; i++) {
-        await getPokemonInfo(i);
+      promises.push(getPokemonInfo(i));
     }
+    await Promise.all(promises)
 } catch (error) {
   
     console.error('Error fetching and displaying pokemons:', error);
@@ -157,7 +158,11 @@ async function getPokemonCount() {
  * following properties:
  */
 async function getPokemonInfo(id) {
+  const pokemonCache = new Map();
   try {
+    if (pokemonCache.has(id)) {
+      return pokemonCache.get(id);
+    }
     const url = `https://pokeapi.co/api/v2/pokemon/${id}`
     const response = await fetch(url);
     if (!response.ok) {
@@ -172,6 +177,7 @@ async function getPokemonInfo(id) {
       types: data.types.map(type => type.type.name),
       frontDefaultSprite: data.sprites.other['official-artwork'].front_default
     };
+    pokemonCache.set(id, pokemonData);
     displayCard(pokemonData);
   } catch (error) {
     displayErrorImage()
