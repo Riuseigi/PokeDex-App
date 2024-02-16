@@ -159,6 +159,21 @@ async function getPokemonCount() {
  * @returns The function `getPokemonInfo` does not have an explicit return statement. However, it does
  * call the `displayCard` function with the `pokemonData` object as an argument.
  */
+async function fetchPokemonData(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Network response was not ok.');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+}
+
+
+
 async function getPokemonInfo(id) {
   const pokemonCache = new Map();
   try {
@@ -166,11 +181,8 @@ async function getPokemonInfo(id) {
       return pokemonCache.get(id);
     }
     const url = `https://pokeapi.co/api/v2/pokemon/${id}`
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error('Network response was not ok.');
-    }
-    const data = await response.json();
+  
+    const data = await fetchPokemonData(url);
     
     const pokemonData = {
       name: data.name,
@@ -191,18 +203,15 @@ async function getPokemonInfo(id) {
   }
 }
 
-async function getPokemonData(id) {
+async function getPokemonDataForFilter(id) {
   const pokemonCache = new Map();
   try {
     if (pokemonCache.has(id)) {
       return pokemonCache.get(id);
     }
     const url = `https://pokeapi.co/api/v2/pokemon/${id}`
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error('Network response was not ok.');
-    }
-    const data = await response.json();
+  
+    const data = await fetchPokemonData(url);
     
     const pokemonData = {
       name: data.name,
@@ -377,9 +386,10 @@ async function pokemonFilter(pokemonType){
     });
 
     pokemonNames.forEach(async (id) => {
-      const pokemonData = await getPokemonData(id);
+      const pokemonData = await getPokemonDataForFilter(id);
       const hasDesiredType = pokemonData.types.some(type => type === pokemonType);
       if (hasDesiredType || pokemonType === "all") {
+      
         displayCard(pokemonData);
         loadMoreBtn.style.display = "none"
       }
