@@ -371,11 +371,7 @@ async function pokemonFilter(pokemonType){
 
     // If a type is selected, filter by type
   
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Network response was not ok.");
-    }
-    const data = await response.json();
+    const data = await fetchPokemonData(url);
     const allPokemon = data.results;
     
     // Fetch information for each filtered Pokemon and display them
