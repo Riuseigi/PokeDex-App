@@ -1,5 +1,5 @@
 const pokemonContainer = document.getElementById("pokemonContainer");
-
+let hasError = false
 
 
 
@@ -55,6 +55,7 @@ async function displayHeader(){
   }
   catch(error){
     console.error(error)
+    
   }
 }
 //Call the function
@@ -73,12 +74,14 @@ async function fetchAndDisplayPokemons(page){
   try {
     const startIndex = (page - 1) * pokemonPerPage + 1;
     const endIndex = startIndex + pokemonPerPage - 1;
-    console.log(startIndex)
-    console.log(endIndex)
+   
+    const promises = [];
     for (let i = startIndex; i <= endIndex; i++) {
-        await getPokemonInfo(i);
+      promises.push(getPokemonInfo(i));
     }
+    await Promise.all(promises)
 } catch (error) {
+  
     console.error('Error fetching and displaying pokemons:', error);
 }
 }
@@ -108,6 +111,7 @@ async function initializePokedex(){
     loadMoreBtn.addEventListener('click', loadMorePokemons);
 } catch (error) {
     console.error('Error initializing Pokédex:', error);
+    
 }
 }
 initializePokedex();
@@ -139,26 +143,46 @@ async function getPokemonCount() {
     return pokemonCount;
   } catch (error) {
     console.error('Error fetching Pokémon count:', error);
+    
     throw error;
+   
   }
   
 }
 
+
 /**
- * The function `getPokemonInfo` fetches information about a Pokémon named Registeel from the PokeAPI
- * and returns an object containing its name, attack and defense stats, types, and front default
- * sprite.
- * @returns The function `getPokemonInfo` is returning an object `pokemonData` which contains the
- * following properties:
+ * The function `getPokemonInfo` fetches information about a Pokemon from the PokeAPI and stores it in
+ * a cache, then displays the Pokemon's data on a card.
+ * @param id - The `id` parameter is the ID of the Pokemon that you want to fetch information for. It
+ * is used to construct the URL for the API request to the PokeAPI.
+ * @returns The function `getPokemonInfo` does not have an explicit return statement. However, it does
+ * call the `displayCard` function with the `pokemonData` object as an argument.
  */
-async function getPokemonInfo(id) {
+async function fetchPokemonData(url) {
   try {
-    const url = `https://pokeapi.co/api/v2/pokemon/${id}`
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error('Network response was not ok.');
     }
-    const data = await response.json();
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+}
+
+
+
+async function getPokemonInfo(id) {
+  const pokemonCache = new Map();
+  try {
+    if (pokemonCache.has(id)) {
+      return pokemonCache.get(id);
+    }
+    const url = `https://pokeapi.co/api/v2/pokemon/${id}`
+  
+    const data = await fetchPokemonData(url);
     
     const pokemonData = {
       name: data.name,
@@ -167,14 +191,46 @@ async function getPokemonInfo(id) {
       types: data.types.map(type => type.type.name),
       frontDefaultSprite: data.sprites.other['official-artwork'].front_default
     };
+    pokemonCache.set(id, pokemonData);
     displayCard(pokemonData);
+
+   
   } catch (error) {
+    displayErrorImage()
     console.error('Error fetching Pokemon info:', error);
     throw error;
+    
   }
 }
 
+async function getPokemonDataForFilter(id) {
+  const pokemonCache = new Map();
+  try {
+    if (pokemonCache.has(id)) {
+      return pokemonCache.get(id);
+    }
+    const url = `https://pokeapi.co/api/v2/pokemon/${id}`
+  
+    const data = await fetchPokemonData(url);
+    
+    const pokemonData = {
+      name: data.name,
+      attack: data.stats.find(stat => stat.stat.name === 'attack').base_stat,
+      defense: data.stats.find(stat => stat.stat.name === 'defense').base_stat,
+      types: data.types.map(type => type.type.name),
+      frontDefaultSprite: data.sprites.other['official-artwork'].front_default
+    };
+    pokemonCache.set(id, pokemonData);
+    return pokemonData
 
+   
+  } catch (error) {
+    
+    console.error('Error fetching Pokemon info:', error);
+    throw error;
+    
+  }
+}
 
 
 /**
@@ -184,14 +240,16 @@ async function getPokemonInfo(id) {
  * specific Pokemon. It includes properties such as `name`, `attack`, `defense`, `frontDefaultSprite`,
  * and `types`.
  */
+const pokemonCard = document.createElement('div')
 async function displayCard(pokemonData){
    
   try {
     
     const pokemonCard = document.createElement('div')
     pokemonCard.classList.add("pokemonCard")
-   
+  
     const pokemonName = pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1);
+    
     const attack = pokemonData.attack;
     const defense = pokemonData.defense;
     const spriteUrl = pokemonData.frontDefaultSprite;
@@ -202,7 +260,9 @@ async function displayCard(pokemonData){
       const color = getPokemonColor(element)
       type.style.backgroundColor = color;
       return `<div class="type" style="background-color:${color};">${element}</div>`
-  });
+  }).join(" ");
+
+
     const pokemonCardInnerHTML= ` <div class="pokemon-info">
     <div class="pokemon-stats">
       <h2 id="pokemonName">${pokemonName}</h2>
@@ -237,6 +297,8 @@ async function displayCard(pokemonData){
     
   } catch (error) {
       console.error(`Can fetch the Data :${error}`)
+      
+
   }
 }
 
@@ -294,6 +356,103 @@ function getPokemonColor(type){
   }
 }
 
+//Filteration
+const pokemonTypeFilter = document.getElementById("pokemonTypeFilter");
+pokemonTypeFilter.addEventListener("change",function(event) {
+  event.preventDefault()
+  const selectedType = this.value;
+  pokemonFilter(selectedType)
+});
+
+const pokemonNames = [];
+async function pokemonFilter(pokemonType) {
+  pokemonContainer.innerHTML = "";
+
+  try {
+    let url = `https://pokeapi.co/api/v2/pokemon?limit=2000`;
+
+    const data = await fetchPokemonData(url);
+    const allPokemon = data.results;
+
+    const filteredPokemonIds = [];
+
+    // Filter Pokémon IDs based on type
+    for (const pokemon of allPokemon) {
+      const pokemonData = await getPokemonDataForFilter(pokemon.name);
+      
+      if (pokemonData.types.some(type => type === pokemonType) || pokemonType === "all") {
+        filteredPokemonIds.push(pokemonData.name);
+       console.log(pokemonData.name)
+      }
+    }
+    
+    console.log(filteredPokemonIds)
+    // Display Pokémon cards for filtered IDs
+    const promises = [];
+    for (const id of filteredPokemonIds) {
+      promises.push(getPokemonDataForFilter(id));
+    }
+
+    const filteredPokemon = await Promise.all(promises);
+
+    filteredPokemon.forEach(pokemon => {
+      displayCard(pokemon);
+    });
+
+    if (filteredPokemonIds.length > pokemonPerPage * currentPage) {
+      showLoadMoreButton();
+    } else {
+      hideLoadMoreButton();
+    }
+
+  } catch (error) {
+    console.error("Error filtering Pokemons:", error);
+  }
+}
 
 
+// Search Pokemon
 
+const searchPokemon = document.querySelector("#searchPokemon")
+
+const filterationForm = document.querySelector(".filteration")
+const errorImage = document.querySelector(".errorImage")
+
+filterationForm.addEventListener("submit", async (event) => {
+    event.preventDefault()
+    pokemonContainer.innerHTML = "";
+    
+    try {
+      
+      const pokemon = searchPokemon.value.toLowerCase()
+      const pokemonName = await getPokemonInfo(pokemon)
+      if(pokemon ===""){
+        pokemonContainer.innerHTML = `<img src="./img/teamRocket.png" alt="" class="errorImage">
+        `
+        loadMoreBtn.style.display = "none";
+      } else{
+        
+      
+      
+      displayCard(pokemonName)
+      
+  
+      loadMoreBtn.style.display = "none"
+      }
+      
+    
+    } catch (error) {
+      console.error(error)
+ 
+      
+    }
+  
+})
+
+
+const loadMoreBtn = document.getElementById('loadMoreBtn');
+displayErrorImage =() => {
+ pokemonContainer.innerHTML = `<img src="./img/teamRocket.png" alt="" class="errorImage">
+  `
+  loadMoreBtn.style.display = "none";
+}

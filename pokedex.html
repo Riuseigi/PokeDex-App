@@ -31,7 +31,7 @@
         <form class="filteration">
           <input type="text" id="searchPokemon" />
           <label for="pokemon-type">Pokemon Type:</label>
-          <select id="pokemon-type" name="pokemon-type">
+          <select id="pokemonTypeFilter" name="pokemon-type">
             <option value="normal">Normal</option>
             <option value="fire">Fire</option>
             <option value="water">Water</option>
@@ -51,10 +51,12 @@
             <option value="steel">Steel</option>
             <option value="fairy">Fairy</option>
           </select>
-          <button onclick="check()">Search</button>
+          <button type="submit"">Search</button>
         </form>
       </div>
-      <div class="pokemons-container" id="pokemonContainer"></div>
+      <div class="pokemons-container" id="pokemonContainer">
+       
+      </div>
       <button id="loadMoreBtn" class="load-more-btn">Load More</button>
     </section>
   </body>
