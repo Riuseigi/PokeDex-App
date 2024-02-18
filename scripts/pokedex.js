@@ -363,34 +363,33 @@ pokemonTypeFilter.addEventListener("change",function() {
   pokemonFilter(selectedType)
 });
 const pokemonNames = [];
-async function pokemonFilter(pokemonType){
+async function pokemonFilter(pokemonType) {
   pokemonContainer.innerHTML = "";
- 
+  pokemonNames.length = 0; // Clear the pokemonNames array
+
   try {
     let url = `https://pokeapi.co/api/v2/pokemon?limit=2000`;
 
-    // If a type is selected, filter by type
-  
     const data = await fetchPokemonData(url);
     const allPokemon = data.results;
-    
-    // Fetch information for each filtered Pokemon and display them
-    
+
+    // Filter Pokemon by type
     allPokemon.forEach(pokemon => {
       const id = pokemon.url.split('/').slice(-2, -1)[0];
       pokemonNames.push(id);
     });
 
-    pokemonNames.forEach(async (id) => {
+    const promises = pokemonNames.map(async id => {
       const pokemonData = await getPokemonDataForFilter(id);
       const hasDesiredType = pokemonData.types.some(type => type === pokemonType);
       if (hasDesiredType || pokemonType === "all") {
-      
         displayCard(pokemonData);
-        loadMoreBtn.style.display = "none"
       }
-      
     });
+
+    await Promise.all(promises);
+
+    loadMoreBtn.style.display = "none";
   } catch (error) {
     console.error("Error filtering Pokemons:", error);
   }
