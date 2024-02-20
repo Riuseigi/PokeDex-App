@@ -59,65 +59,74 @@
        <div id="myModal" class="modal">
         <div class="modal-content">
           <span class="close">&times;</span>
-          <div id="imageSprite">
+          <div class="modal-content__card">
+         
+          <div id="imageSprite" class="modal-content__imageSprite">
             <img src="./img/pikachu_sprite.png" alt="" height="200">
             <div class="types">
-                <div class="type1">Water</div>
-                <div class="type2">Fire</div>
+                <div class="type">Water</div>
+                <div class="type">Fire</div>
+              </div>
             </div>
             <div class="pokemonInfo ">
                 <div class="pokemonID">
-                    <div class="pokemonName">Pikachu</div>
-                    <div class="id">25</div>
+                    <h1 class="pokemonName">Pikachu</h1>
+                    <div class="id">#25</div>
                 </div>
-                <div class="about">
-                    <div class="weight">
+                <div class="pokemon_about">
+                    <div class="pokemon_weight">
 
                       <div class="icon">
-                        <img src="./img/weight.png" alt="weight icon" >
-                        8,5kg
+                        <img src="./img/weight.svg" alt="">
+                        <p>8,5kg</p>
                       </div>
                       <div class="label">Weight</div>
                     </div>
-                    <div class="height">
+                    <div class="pokemon_height">
                       <div class="icon">
-                        <img src="./img/height.png" alt="weight icon" >
-                        8,5kg8,5kg</div>
-                      <div class="label">Weight</div>
+                        <img src="./img/height.svg" alt="weight icon" >
+                        <p>8,5kg</p>
+                        </div>
+                      <div class="label">Height</div>
                     </div>
-                    <div class="special-moves"></div>
+                    <div class="special-moves">
+                      <img src="./img/move.svg" alt="">
+                      <p class="move">Static</p>
+                      <div class="label">Move</div>
+                    </div>
                 </div>
-                <div class="description">When it is angered, it immediately discharges the energy stored in the pouches in its cheeks.</div>
+                <p class="pokemon_description">When it is angered, it immediately discharges the energy stored in the pouches in its cheeks.</p>
                 <div class="base-stats">
                     
                     <div class="hp">
-                      <span>HP</span>
-                      <span>34</span>
+                      <div>HP</div>
+                      <div>34</div>
                       <progress id="file" value="32" max="100"> 32% </progress></div>
                     <div class="atk">
-                      <span>ATK</span>
-                      <span>34</span>
+                      <div>ATK</div>
+                      <div>34</div>
                       <progress id="file" value="32" max="100"> 32% </progress></div>
                     <div class="def">
-                      <span>DEF</span>
-                      <span>34</span>
+                      <div>DEF</div>
+                      <div>34</div>
                       <progress id="file" value="32" max="100"> 32% </progress></div>
                     <div class="satk">
-                      <span>SATK</span>
-                      <span>34</span>
+                      <div>SATK</div>
+                      <div>34</div>
                       <progress id="file" value="32" max="100"> 32% </progress></div>
                     <div class="sdef">
-                      <span>SDEF</span>
-                      <span>34</span>
+                      <div>SDEF</div>
+                      <div>34</div>
                       <progress id="file" value="32" max="100"> 32% </progress></div>
                     <div class="spd">
-                      <span>SPD</span>
-                      <span>34</span>
+                      <div>SPD</div>
+                      <div>34</div>
                       <progress id="file" value="32" max="100"> 32% </progress></div>
                 </div>
             </div>
-          </div>
+         
         </div>
+      </div>
       </div>
       </div>
       
@@ -126,5 +135,6 @@
   <script >AOS.init();</script>
   <script src="./scripts/sample.js"></script>
   <script src="https://cdn.lordicon.com/lordicon.js"></script>
+  
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </html>
