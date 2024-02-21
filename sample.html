@@ -58,24 +58,28 @@
       <div class="pokemons-container" id="pokemonContainer">
         <button id="myBtn">Modal</button>
        <div id="myModal" class="modal">
+      
         <div class="modal-content">
           <span class="close">&times;</span>
           <div class="modal-content__card">
-         
-          <div id="imageSprite" class="modal-content__imageSprite">
-            <img src="./img/pikachu_sprite.png" alt="" height="250px">
             
+          <div id="imageSprite" class="modal-content__imageSprite">
+            <img class="pokemon" src="./img/pikachu_sprite.png" alt="" >
+            <img class="pokeball" src="./img/pokeball-background.svg" alt="" srcset="">
             </div>
+            
             <div class="pokemonInfo ">
+              <div class="pokemonID">
+                <h1 class="pokemonName">Pikachu<span class="id">#25</span></h1>
+            </div>
               <div class="types">
                 <div class="type">Water</div>
                 <div class="type">Fire</div>
               </div>
-                <div class="pokemonID">
-                    <h1 class="pokemonName">Pikachu</h1>
-                    <div class="id">#25</div>
-                </div>
+               
+                <h1 class="headText">About</h1>
                 <div class="pokemon_about">
+                    
                     <div class="pokemon_weight">
 
                       <div class="icon">
@@ -98,27 +102,30 @@
                     </div>
                 </div>
                 <p class="pokemon_description">When it is angered, it immediately discharges the energy stored in the pouches in its cheeks.</p>
+                <h1 class="headText">Base Stats</h1>
                 <div class="base-stats">
                     
                   <div class="stat">
-                    <div class="stats-label">ATK</div>
+                    <div class="stats-label">ATK <span>34</span></div>
+                    
                     <div class="bar"><div class="progress" style="width: 80%;"></div></div>
                   </div>
                   <div class="stat">
-                    <div class="stats-label">DEF</div>
+                    <div class="stats-label">DEF <span>34</span></div>
                     <div class="bar"><div class="progress" style="width: 70%;"></div></div>
                   </div>
                   <div class="stat">
-                    <div class="stats-label">SPD</div>
+                    <div class="stats-label">SPD <span>34</span></div>
                     <div class="bar"><div class="progress" style="width: 60%;"></div></div>
                   </div>
 
                   <div class="stat">
-                    <div class="stats-label">SATK</div>
+                    <div class="stats-label">SATK <span>34</span></div>
                     <div class="bar"><div class="progress" style="width: 90%;"></div></div>
                   </div>
                   <div class="stat">
-                    <div class="stats-label">SDEF</div>
+                    <div class="stats-label">SDEF <span>34</span></div>
+                    
                     <div class="bar"><div class="progress" style="width: 85%;"></div></div>
                   </div>
                 </div>
