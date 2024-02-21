@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Pokedex</title>
     <link rel="stylesheet" href="./styles/pokedex.css" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   </head>
   <body>
@@ -62,13 +63,14 @@
           <div class="modal-content__card">
          
           <div id="imageSprite" class="modal-content__imageSprite">
-            <img src="./img/pikachu_sprite.png" alt="" height="200">
-            <div class="types">
+            <img src="./img/pikachu_sprite.png" alt="" height="250px">
+            
+            </div>
+            <div class="pokemonInfo ">
+              <div class="types">
                 <div class="type">Water</div>
                 <div class="type">Fire</div>
               </div>
-            </div>
-            <div class="pokemonInfo ">
                 <div class="pokemonID">
                     <h1 class="pokemonName">Pikachu</h1>
                     <div class="id">#25</div>
@@ -98,30 +100,27 @@
                 <p class="pokemon_description">When it is angered, it immediately discharges the energy stored in the pouches in its cheeks.</p>
                 <div class="base-stats">
                     
-                    <div class="hp">
-                      <div>HP</div>
-                      <div>34</div>
-                      <progress id="file" value="32" max="100"> 32% </progress></div>
-                    <div class="atk">
-                      <div>ATK</div>
-                      <div>34</div>
-                      <progress id="file" value="32" max="100"> 32% </progress></div>
-                    <div class="def">
-                      <div>DEF</div>
-                      <div>34</div>
-                      <progress id="file" value="32" max="100"> 32% </progress></div>
-                    <div class="satk">
-                      <div>SATK</div>
-                      <div>34</div>
-                      <progress id="file" value="32" max="100"> 32% </progress></div>
-                    <div class="sdef">
-                      <div>SDEF</div>
-                      <div>34</div>
-                      <progress id="file" value="32" max="100"> 32% </progress></div>
-                    <div class="spd">
-                      <div>SPD</div>
-                      <div>34</div>
-                      <progress id="file" value="32" max="100"> 32% </progress></div>
+                  <div class="stat">
+                    <div class="stats-label">ATK</div>
+                    <div class="bar"><div class="progress" style="width: 80%;"></div></div>
+                  </div>
+                  <div class="stat">
+                    <div class="stats-label">DEF</div>
+                    <div class="bar"><div class="progress" style="width: 70%;"></div></div>
+                  </div>
+                  <div class="stat">
+                    <div class="stats-label">SPD</div>
+                    <div class="bar"><div class="progress" style="width: 60%;"></div></div>
+                  </div>
+
+                  <div class="stat">
+                    <div class="stats-label">SATK</div>
+                    <div class="bar"><div class="progress" style="width: 90%;"></div></div>
+                  </div>
+                  <div class="stat">
+                    <div class="stats-label">SDEF</div>
+                    <div class="bar"><div class="progress" style="width: 85%;"></div></div>
+                  </div>
                 </div>
             </div>
          
