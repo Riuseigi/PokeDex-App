@@ -182,15 +182,33 @@ body{
 
 /* Pokemon Card */
 .pokemonCard{
-    display: flex;
-    
-    max-width: 358px;
-    padding: 10px 20px;
-    border-radius: 15px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+  display: flex;
+  cursor: pointer;
+  max-width: 358px;
+  padding: 10px 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 
 }
+.pokemonCard:hover {
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+    animation: bounceOut 0.5s ease;
+}
+@keyframes bounceOut {
+  20% {
+      transform: scale(0.9);
+  }
+  50% {
+      transform: scale(1.1);
+  }
+  100% {
+      transform: scale(1);
+  }
+}
+
 
 .pokemon-stats{
     display: grid;
