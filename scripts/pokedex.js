@@ -186,11 +186,17 @@ async function getPokemonInfo(id) {
     
     const pokemonData = {
       name: data.name,
+      id: data.id,
       attack: data.stats.find(stat => stat.stat.name === 'attack').base_stat,
       defense: data.stats.find(stat => stat.stat.name === 'defense').base_stat,
+      speed: data.stats.find(stat => stat.stat.name === 'speed').base_stat,
+      specialAttack: data.stats.find(stat => stat.stat.name === 'special-attack').base_stat,
+      specialDefense: data.stats.find(stat => stat.stat.name === 'special-defense').base_stat,
+      description: data.species.url,
+      specialMove: data.moves[0].move.name,
       types: data.types.map(type => type.type.name),
       frontDefaultSprite: data.sprites.other['official-artwork'].front_default
-    };
+  };
     pokemonCache.set(id, pokemonData);
     displayCard(pokemonData);
 
@@ -286,7 +292,18 @@ async function displayCard(pokemonData){
 
     pokemonCard.innerHTML  = pokemonCardInnerHTML;
     pokemonCard.setAttribute("data-aos","fade-up");
-    
+    pokemonCard.addEventListener("click",() => {
+      var modal = document.getElementById("myModal");
+      var closeBtn = document.querySelector(".close");
+      modal.style.display = "block";
+      document.body.style.overflow = "hidden"
+      closeBtn.addEventListener("click", function() {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto"
+
+      
+      });
+    })
     AOS.init();
    
     const firstType = pokemonData.types[0]; // Assuming types is an array of type strings
