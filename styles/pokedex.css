@@ -341,7 +341,7 @@ body{
 .modal-content {
   color: 1D1D1D;
   background-color: #F9CF30;
-  margin: 3% auto; /* 10% from the top and centered horizontally */
+  margin: 5% auto; /* 10% from the top and centered horizontally */
   padding: 20px;
   border: 1px solid #888;
   border-radius: 15px;
@@ -377,34 +377,38 @@ body{
   height: 350px;
 }
 .modal-content__imageSprite .pokemon{
+  z-index: 2;
   position: absolute;
   max-height: 400px;
-  top: 3%;
+  top: 1%;
  -webkit-filter: drop-shadow(1px 1px 0 black)
                   drop-shadow(-1px -1px 0 black);
-  filter: drop-shadow(1px 1px 0 black) 
-          drop-shadow(-1px -1px 0 black);
+  filter: drop-shadow(1px 1px 0 rgb(156, 150, 150)) 
+          drop-shadow(-1px -1px 0 white);
 }
 .modal-content__imageSprite .pokeball{
   position: absolute;
+  z-index: 1;
  right: 10%;
  height: 400px;
 }
 
 
-.pokemonInfo .types{
+.pokemonInfo .modal-types{
    display: flex;
    justify-content: center;
     column-gap: 10px;
     font-size: 15px;
     padding: 5px 10px;
     font-weight: bold;
-    border-radius: 20px;
     color: #F2F2F2;
+    
 }
- .types .type{
+ .modal-types .modal-type{
     font-family: var(--karlaFont);
     padding: 5px 10px;
+    background-color: red;
+    border-radius: 20px;
 }
 .pokemonInfo{
   background-color: #F2F2F2;
@@ -481,7 +485,7 @@ body{
 
 .base-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 400px));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 400px));
   gap: 10px;
   justify-content: center;
   align-items: center;
@@ -521,7 +525,7 @@ body{
   z-index: 2;
   color: #ffffff;
   float: right;
-  font-size: 28px;
+  font-size: 2rem;
   font-weight: bold;
   top: 10px; /* Adjust as needed */
   right: 20px; /* Adjust as needed */
@@ -590,8 +594,9 @@ body{
       }
 
       .modal-content{
-        width: 100%;
-       
+     
+       padding: 10px;
+       max-width: 100%;
       
       }
       .modal-content__imageSprite .pokemon{
@@ -604,7 +609,7 @@ body{
         left: 50%;
       }
       .modal-content__imageSprite{
-        height: 200px;
+        height: 180px;
       }
       
 }

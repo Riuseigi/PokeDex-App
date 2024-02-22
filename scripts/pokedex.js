@@ -181,9 +181,9 @@ async function getPokemonInfo(id) {
       return pokemonCache.get(id);
     }
     const url = `https://pokeapi.co/api/v2/pokemon/${id}`
-  
+ 
     const data = await fetchPokemonData(url);
-    
+  
     const pokemonData = {
       name: data.name,
       id: data.id,
@@ -192,17 +192,18 @@ async function getPokemonInfo(id) {
       speed: data.stats.find(stat => stat.stat.name === 'speed').base_stat,
       specialAttack: data.stats.find(stat => stat.stat.name === 'special-attack').base_stat,
       specialDefense: data.stats.find(stat => stat.stat.name === 'special-defense').base_stat,
-      description: data.species.url,
+     
       specialMove: data.moves[0].move.name,
       types: data.types.map(type => type.type.name),
-      frontDefaultSprite: data.sprites.other['official-artwork'].front_default
+      frontDefaultSprite: data.sprites.other['official-artwork'].front_default,
+      cry: data.cries.latest
   };
     pokemonCache.set(id, pokemonData);
     displayCard(pokemonData);
 
    
   } catch (error) {
-    displayErrorImage()
+    
     console.error('Error fetching Pokemon info:', error);
     throw error;
     
@@ -267,7 +268,8 @@ async function displayCard(pokemonData){
       type.style.backgroundColor = color;
       return `<div class="type" style="background-color:${color};">${element}</div>`
   }).join(" ");
-
+  const pokemonCry  = pokemonData.cry;
+  console.log(pokemonCry)
 
     const pokemonCardInnerHTML= ` <div class="pokemon-info">
     <div class="pokemon-stats">
@@ -294,17 +296,114 @@ async function displayCard(pokemonData){
     pokemonCard.setAttribute("data-aos","fade-up");
     pokemonCard.addEventListener("click",() => {
       var modal = document.getElementById("myModal");
-      var closeBtn = document.querySelector(".close");
-      //Close button
+      modal.innerHTML = "";
+      const modalCard = document.createElement("div")
+      modalCard.classList.add("modal-content")
+      modal.appendChild(modalCard)
+      const cryAudio = new Audio(pokemonCry);
+     
+    
+      
+      const modalContent = `
+      <span class="close">&times;</span>
+      <div class="modal-content__card">
+        
+      <div id="imageSprite" class="modal-content__imageSprite">
+      <img class="pokeball" src="./img/pokeball-background.svg" alt="" srcset="">
+        <img class="pokemon" src="${spriteUrl}" alt="" >
+        
+        </div>
+        
+        <div class="pokemonInfo ">
+          <div class="pokemonID">
+            <h1 class="pokemonName">Pikachu<span class="id">#25</span></h1>
+        </div>
+          <div class="modal-types">
+            <div class="modal-type">Water</div>
+            <div class="modal-type">Fire</div>
+          </div>
+           
+            <h1 class="headText">About</h1>
+            <div class="pokemon_about">
+                
+                <div class="pokemon_weight">
+
+                  <div class="icon">
+                    <img src="./img/weight.svg" alt="">
+                    <p>8,5kg</p>
+                  </div>
+                  <div class="label">Weight</div>
+                </div>
+                <div class="pokemon_height">
+                  <div class="icon">
+                    <img src="./img/height.svg" alt="weight icon" >
+                    <p>8,5kg</p>
+                    </div>
+                  <div class="label">Height</div>
+                </div>
+                <div class="special-moves">
+                  <img src="./img/move.svg" alt="">
+                  <p class="move">Static</p>
+                  <div class="label">Move</div>
+                </div>
+            </div>
+            <p class="pokemon_description">When it is angered, it immediately discharges the energy stored in the pouches in its cheeks.</p>
+            <h1 class="headText">Base Stats</h1>
+            <div class="base-stats">
+                
+              <div class="stat">
+                <div class="stats-label">ATK <span>34</span></div>
+                
+                <div class="bar"><div class="progress" style="width: 80%;"></div></div>
+              </div>
+              <div class="stat">
+                <div class="stats-label">DEF <span>34</span></div>
+                <div class="bar"><div class="progress" style="width: 70%;"></div></div>
+              </div>
+              <div class="stat">
+                <div class="stats-label">SPD <span>34</span></div>
+                <div class="bar"><div class="progress" style="width: 60%;"></div></div>
+              </div>
+
+              <div class="stat">
+                <div class="stats-label">SATK <span>34</span></div>
+                <div class="bar"><div class="progress" style="width: 90%;"></div></div>
+              </div>
+              <div class="stat">
+                <div class="stats-label">SDEF <span>34</span></div>
+                
+                <div class="bar"><div class="progress" style="width: 85%;"></div></div>
+              </div>
+            </div>
+        </div>
+     
+    </div>
+ `
+
+
+      modal.style.display = "block";
+      document.body.style.overflow = "hidden";
+      cryAudio.play();
+      document.addEventListener('DOMContentLoaded', function() {
+        // Your JavaScript code here
+        const modalContentElement = document.querySelector('.modal-content');
+        modalContentElement.style.backgroundColor = 'red'; // Or any other style change
+      });
+     
+      
+      modalCard.innerHTML = modalContent;
+      modalCard.style.backgroundColor = backgroundColor;
+
+
+
+      //close btn
+      const closeBtn = modal.querySelector(".close");
       closeBtn.addEventListener("click", function() {
         modal.style.display = "none";
         document.body.style.overflow = "auto"
+        cryAudio.pause()
       });
-
-      modal.style.display = "block";
-      document.body.style.overflow = "hidden"
-     
-    })
+    });
     AOS.init();
    
     const firstType = pokemonData.types[0]; // Assuming types is an array of type strings
