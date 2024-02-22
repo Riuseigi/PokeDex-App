@@ -180,10 +180,8 @@ async function getPokemonInfo(id) {
     if (pokemonCache.has(id)) {
       return pokemonCache.get(id);
     }
-    const url = `https://pokeapi.co/api/v2/pokemon/${id}`
- 
+    const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
     const data = await fetchPokemonData(url);
-  
     const pokemonData = {
       name: data.name,
       id: data.id,
@@ -192,21 +190,24 @@ async function getPokemonInfo(id) {
       speed: data.stats.find(stat => stat.stat.name === 'speed').base_stat,
       specialAttack: data.stats.find(stat => stat.stat.name === 'special-attack').base_stat,
       specialDefense: data.stats.find(stat => stat.stat.name === 'special-defense').base_stat,
-     
-      specialMove: data.moves[0].move.name,
+      specialMove: data.moves.find(move => move.version_group_details[0].move_learn_method.name === 'level-up').move.name,
       types: data.types.map(type => type.type.name),
       frontDefaultSprite: data.sprites.other['official-artwork'].front_default,
-      cry: data.cries.latest
-  };
+      cry: data.cries.latest,
+      weight: data.weight, 
+      height: data.height 
+    };
+    const speciesUrl = data.species.url;
+    const speciesResponse = await fetch(speciesUrl);
+    const speciesData = await speciesResponse.json();
+    const description = speciesData.flavor_text_entries.find(entry => entry.language.name === 'en').flavor_text;
+    const cleanedDescription = description.replace(/[\u0000-\u001F]/g, ' ');
+    pokemonData.description = cleanedDescription;
     pokemonCache.set(id, pokemonData);
     displayCard(pokemonData);
-
-   
   } catch (error) {
-    
     console.error('Error fetching Pokemon info:', error);
     throw error;
-    
   }
 }
 
@@ -251,8 +252,9 @@ const pokemonCard = document.createElement('div')
 async function displayCard(pokemonData){
    
   try {
-    
+   
     const pokemonCard = document.createElement('div')
+   
     pokemonCard.classList.add("pokemonCard")
   
     const pokemonName = pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1);
@@ -260,6 +262,12 @@ async function displayCard(pokemonData){
     const attack = pokemonData.attack;
     const defense = pokemonData.defense;
     const spriteUrl = pokemonData.frontDefaultSprite;
+    const id = pokemonData.id;
+    const description = pokemonData.description;
+    const pokemonCry  = pokemonData.cry;
+    const pokemonWeight = pokemonData.weight;
+    const pokemonHeight = pokemonData.height;
+    const specialMove = pokemonData.specialMove.charAt(0).toUpperCase() + pokemonData.specialMove.slice(1).replace(/-/g, ' ');
     const typesDiv = pokemonData.types.map((element) => {
       const type = document.createElement("div")
       type.textContent = element;
@@ -268,8 +276,8 @@ async function displayCard(pokemonData){
       type.style.backgroundColor = color;
       return `<div class="type" style="background-color:${color};">${element}</div>`
   }).join(" ");
-  const pokemonCry  = pokemonData.cry;
-  console.log(pokemonCry)
+  
+  
 
     const pokemonCardInnerHTML= ` <div class="pokemon-info">
     <div class="pokemon-stats">
@@ -301,7 +309,14 @@ async function displayCard(pokemonData){
       modalCard.classList.add("modal-content")
       modal.appendChild(modalCard)
       const cryAudio = new Audio(pokemonCry);
-     
+      const typesDivModal = pokemonData.types.map((element) => {
+        const type = document.createElement("div")
+        type.textContent = element;
+        type.classList.add("type1")
+        const color = getPokemonColor(element)
+        type.style.backgroundColor = color;
+        return `<div class="modal-type" style="background-color:${color};">${element}</div>`
+    }).join(" ");
     
       
       const modalContent = `
@@ -316,39 +331,38 @@ async function displayCard(pokemonData){
         
         <div class="pokemonInfo ">
           <div class="pokemonID">
-            <h1 class="pokemonName">Pikachu<span class="id">#25</span></h1>
+            <div class="pokemonName">${pokemonName}<span class="id" style="background-color:${backgroundColor}">${id}</span></div>
         </div>
           <div class="modal-types">
-            <div class="modal-type">Water</div>
-            <div class="modal-type">Fire</div>
+            ${typesDivModal}
           </div>
            
-            <h1 class="headText">About</h1>
+            <h1 class="headText" style="color:${backgroundColor}">About</h1>
             <div class="pokemon_about">
                 
                 <div class="pokemon_weight">
 
                   <div class="icon">
                     <img src="./img/weight.svg" alt="">
-                    <p>8,5kg</p>
+                    <p>${pokemonWeight}g</p>
                   </div>
                   <div class="label">Weight</div>
                 </div>
                 <div class="pokemon_height">
                   <div class="icon">
                     <img src="./img/height.svg" alt="weight icon" >
-                    <p>8,5kg</p>
+                    <p>${pokemonHeight}cm</p>
                     </div>
                   <div class="label">Height</div>
                 </div>
                 <div class="special-moves">
                   <img src="./img/move.svg" alt="">
-                  <p class="move">Static</p>
+                  <p class="move">${specialMove}</p>
                   <div class="label">Move</div>
                 </div>
             </div>
-            <p class="pokemon_description">When it is angered, it immediately discharges the energy stored in the pouches in its cheeks.</p>
-            <h1 class="headText">Base Stats</h1>
+            <p class="pokemon_description">${description}</p>
+            <h1 class="headText" style="color:${backgroundColor}">Base Stats</h1>
             <div class="base-stats">
                 
               <div class="stat">
@@ -381,15 +395,12 @@ async function displayCard(pokemonData){
  `
 
 
+ 
       modal.style.display = "block";
       document.body.style.overflow = "hidden";
       cryAudio.play();
-      document.addEventListener('DOMContentLoaded', function() {
-        // Your JavaScript code here
-        const modalContentElement = document.querySelector('.modal-content');
-        modalContentElement.style.backgroundColor = 'red'; // Or any other style change
-      });
      
+      
       
       modalCard.innerHTML = modalContent;
       modalCard.style.backgroundColor = backgroundColor;
