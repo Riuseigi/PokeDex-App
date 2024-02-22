@@ -339,15 +339,26 @@ body{
 
 /* Modal Content/Box */
 .modal-content {
+  color: 1D1D1D;
   background-color: #F9CF30;
-  margin: 10% auto; /* 10% from the top and centered horizontally */
-  padding: 40px;
+  margin: 3% auto; /* 10% from the top and centered horizontally */
+  padding: 20px;
   border: 1px solid #888;
   border-radius: 15px;
-  width: 80%; /* 80% of the viewport width */
+  width: 100%; /* 80% of the viewport width */
   max-width: 95%; /* Maximum width of 95% of the viewport width */
   position: relative;
+  animation: fadeIn 0.3s ease;
 }
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
 .modal-content__card{
   column-gap: 40px;
   display: grid;
@@ -380,6 +391,7 @@ body{
  height: 400px;
 }
 
+
 .pokemonInfo .types{
    display: flex;
    justify-content: center;
@@ -396,7 +408,8 @@ body{
 }
 .pokemonInfo{
   background-color: #F2F2F2;
-  padding: 40px 20px;
+  padding: 40px 10px;
+  margin: 0;
   border-radius: 15px;
   box-shadow: 1px -1px 20px 1px rgba(201,197,197,0.75) inset;
 -webkit-box-shadow: 1px -1px 20px 1px rgba(201,197,197,0.75) inset;
@@ -578,7 +591,8 @@ body{
 
       .modal-content{
         width: 100%;
-        padding: 10px;
+       
+      
       }
       .modal-content__imageSprite .pokemon{
         max-height: 250px;
