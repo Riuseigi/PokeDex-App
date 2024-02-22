@@ -321,33 +321,47 @@ body{
 
 /* Modal Content/Box */
 .modal-content {
-  background-color: #f4dc26;
-  margin: 10% auto; /* 15% from the top and centered */
-  padding: 20px;
+  background-color: #F9CF30;
+  margin: 10% auto; /* 10% from the top and centered horizontally */
+  padding: 40px;
   border: 1px solid #888;
   border-radius: 15px;
-  width: 80%; /* Could be more or less, depending on screen size */
-
-  
+  width: 80%; /* 80% of the viewport width */
+  max-width: 95%; /* Maximum width of 95% of the viewport width */
+  position: relative;
 }
 .modal-content__card{
-  
-  column-gap: 5%;
+  column-gap: 40px;
+  display: grid;
+ 
+  align-items: center;
   flex-wrap: wrap;
-  justify-content: center;
 }
 .modal-content__imageSprite{
-  display: grid;
+ 
+  right: 10%;
+  bottom: 20%;
+  display: flex;
   justify-content: center;
   background-color: inherit;
   
+  height: 350px;
 }
-.modal-content__imageSprite img{
- min-height: 100px;
- padding: 20px;
-
-
+.modal-content__imageSprite .pokemon{
+  position: absolute;
+  max-height: 400px;
+  top: 3%;
+ -webkit-filter: drop-shadow(1px 1px 0 black)
+                  drop-shadow(-1px -1px 0 black);
+  filter: drop-shadow(1px 1px 0 black) 
+          drop-shadow(-1px -1px 0 black);
 }
+.modal-content__imageSprite .pokeball{
+  position: absolute;
+ right: 10%;
+ height: 400px;
+}
+
 .pokemonInfo .types{
    display: flex;
    justify-content: center;
@@ -358,31 +372,44 @@ body{
     border-radius: 20px;
     color: #F2F2F2;
 }
-.modal-content__imageSprite .types .type{
+ .types .type{
     font-family: var(--karlaFont);
-    padding: 10px 20px;
+    padding: 5px 10px;
 }
 .pokemonInfo{
   background-color: #F2F2F2;
-  padding: 10px 20px;
+  padding: 40px 20px;
   border-radius: 15px;
+  box-shadow: 1px -1px 20px 1px rgba(201,197,197,0.75) inset;
+-webkit-box-shadow: 1px -1px 20px 1px rgba(201,197,197,0.75) inset;
+-moz-box-shadow: 1px -1px 20px 1px rgba(201,197,197,0.75) inset;
 }
 .pokemonID{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  text-align: center;
   align-items: center;
+  justify-content: center;
+  column-gap: 30px;
+
 }
 .pokemonID .pokemonName{
-  font-size: 3rem;
-  font-family: var(--soureSansFont);
+  font-size: 4rem;
+  font-family: var(--karlaFont);
+  font-weight: bold;
 }
 .pokemonID .id{
-  font-size: 2rem;
+  font-size: .8rem;
   font-family: var(--karlaFont);
   background-color: #4B4B4B;
   padding: 5px 10px;
   color: white;
   border-radius: 20px;
+}
+.headText{
+  text-align: center;
+  font-family: var(--karlaFont);
+  font-weight: bold;
+  color: #F9CF30;
 }
 .pokemon_about{
   font-family: var(--karlaFont);
@@ -391,6 +418,7 @@ body{
   justify-content: center;
   text-align: center;
   margin-bottom: 20px;
+  
 }
 .pokemon_weight,
 .pokemon_height,
@@ -412,9 +440,7 @@ body{
 .pokemon_about i{
   font-size: 2rem;
 }
-.pokemon_about:first-child{
-  border-right: rgb(179, 174, 174);
-}
+
 .pokemon_description{
   padding: 10px 15px;
   font-family: var(--karlaFont);
@@ -430,36 +456,44 @@ body{
   align-items: center;
 }
 .stats-label {
-  width: 40px;
+ 
+  color: #F9CF30;
   font-family: var(--soureSansFont);
-  border-right: 1px solid gray;
+  
   margin-bottom: 10px;
   font-weight: bold;
+  font-size: 1.5rem;
 }
-
+.stats-label span{
+  color: #333;
+  margin-left: 10px;
+}
 .bar {
-  
+  border: 1px solid rgb(228, 225, 225);
   height: 10px;
-  background-color: #f0f0f0;
+  background-color: hsla(47, 94%, 58%,0.2);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .progress {
   height: 100%;
+  background-color: #F9CF30;
   
-  background-color: #8ae78d;
-  transition: width 0.5s ease;
 }
 
   
 
 /* Close Button */
 .close {
-  color: #aaa;
+  position: absolute;
+  z-index: 2;
+  color: #ffffff;
   float: right;
   font-size: 28px;
   font-weight: bold;
+  top: 10px; /* Adjust as needed */
+  right: 20px; /* Adjust as needed */
 }
 
 .close:hover,
@@ -467,14 +501,13 @@ body{
   color: black;
   text-decoration: none;
   cursor: pointer;
+  
 }
 
 
 
 
-#file {
-  color: yellow; /* Change the color of the value here */
-}
+
 
 
 
@@ -525,5 +558,21 @@ body{
         transform: rotate(-45deg) translate(5px, -5px);
       }
 
+      .modal-content{
+        width: 100%;
+        padding: 10px;
+      }
+      .modal-content__imageSprite .pokemon{
+        max-height: 250px;
+        top: 0;
+      }
+      .modal-content__imageSprite .pokeball{
+        max-height: 250px;
+        top: 0%;
+        left: 50%;
+      }
+      .modal-content__imageSprite{
+        height: 200px;
+      }
       
 }
