@@ -1,9 +1,4 @@
 
-
-
-
-
-
 /* This code is adding a click event listener to an element with the class "hamburger". When the
 element is clicked, it toggles the "active" class on both the element with the class "navLinks" and
 the element with the class "hamburger". This is commonly used to create a toggle effect, such as
@@ -14,30 +9,6 @@ document.querySelector('.hamburger').addEventListener('click', function() {
 });
 
 
-/* The `pokemonTypeColors` object is a mapping of Pokémon types to their corresponding color codes.
-Each type is represented as a key-value pair, where the type name is the key and the color code is
-the value. This object is used in the `getPokemonColor` function to determine the background color
-for each Pokémon type displayed on the card. */
-const pokemonTypeColors = {
-  Normal: '#A8A878',
-  Fire: '#F08030',
-  Water: '#6890F0',
-  Electric: '#F8D030',
-  Grass: '#78C850',
-  Ice: '#98D8D8',
-  Fighting: '#C03028',
-  Poison: '#A040A0',
-  Ground: '#E0C068',
-  Flying: '#A890F0',
-  Psychic: '#F85888',
-  Bug: '#A8B820',
-  Rock: '#B8A038',
-  Ghost: '#705898',
-  Dragon: '#7038F8',
-  Dark: '#705848',
-  Steel: '#B8B8D0',
-  Fairy: '#EE99AC'
-};
 
 
 
@@ -58,7 +29,7 @@ async function displayHeader(){
     
   }
 }
-//Call the function
+//Call the function to display the Header
 displayHeader();
 
 
@@ -66,10 +37,7 @@ displayHeader();
 const pokemonPerPage = 30;
 let currentPage = 1;
 
-/**
- * The function fetches and displays a range of pokemons based on the given page number.
- * @param page - The page parameter represents the page number of the pokemons to fetch and display.
- */
+// This function display the number of pokemon specified
 async function fetchAndDisplayPokemons(page){
   try {
     const startIndex = (page - 1) * pokemonPerPage + 1;
@@ -79,7 +47,9 @@ async function fetchAndDisplayPokemons(page){
     for (let i = startIndex; i <= endIndex; i++) {
       promises.push(getPokemonInfo(i));
     }
-    await Promise.all(promises)
+    (await Promise.all(promises)).forEach(pokemon =>{
+      displayCard(pokemon)
+    })
 } catch (error) {
 
     console.error('Error fetching and displaying pokemons:', error);
@@ -87,19 +57,14 @@ async function fetchAndDisplayPokemons(page){
 }
 
 
-/**
- * The function `loadMorePokemons` increments the `currentPage` variable and then calls the
- * `fetchAndDisplayPokemons` function.
- */
+//This function add the current page loaded
 async function loadMorePokemons(){
   currentPage++;
   await fetchAndDisplayPokemons(currentPage);
 }
 
-/**
- * The function `initializePokedex` initializes the Pokédex by fetching and displaying Pokémon data,
- * and setting up a click event listener for a "Load More" button.
- */
+
+// this function load the pokemon when click the button
 async function initializePokedex(){
   try {
     // const count = await getPokemonCount();
@@ -127,8 +92,10 @@ initializePokedex();
 
 
 /**
- * The function `getPokemonCount` fetches the count of Pokémon from the PokeAPI.
- * @returns the number of Pokémon count.
+ * The function `getPokemonCount` asynchronously fetches the count of Pokémon from the PokeAPI and
+ * handles errors appropriately.
+ * @returns The `getPokemonCount` function is returning the total count of Pokémon available in the
+ * API.
  */
 async function getPokemonCount() {
   let pokemonCount;
@@ -151,14 +118,7 @@ async function getPokemonCount() {
 }
 
 
-/**
- * The function `getPokemonInfo` fetches information about a Pokemon from the PokeAPI and stores it in
- * a cache, then displays the Pokemon's data on a card.
- * @param id - The `id` parameter is the ID of the Pokemon that you want to fetch information for. It
- * is used to construct the URL for the API request to the PokeAPI.
- * @returns The function `getPokemonInfo` does not have an explicit return statement. However, it does
- * call the `displayCard` function with the `pokemonData` object as an argument.
- */
+// get the response.json
 async function fetchPokemonData(url) {
   try {
     const response = await fetch(url);
@@ -174,25 +134,7 @@ async function fetchPokemonData(url) {
   }
 }
 
-async function getPokemonDataForFilter(id) {
-  const pokemonCache = new Map();
-  try {
-    if (pokemonCache.has(id)) {
-      return pokemonCache.get(id);
-    }
-    const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
-    const data = await fetchPokemonData(url);
-    const pokemonData = await createPokemonData(data);
-    pokemonCache.set(id, pokemonData);
-    return pokemonData;
-  } catch (error) {
-    console.error('Error fetching Pokemon info:', error);
-    return []; // Return empty array if Pokemon data cannot be fetched
-    
-    
-  }
-}
-
+// get the pokemonData
 async function getPokemonInfo(id) {
   const pokemonCache = new Map();
   try {
@@ -203,7 +145,7 @@ async function getPokemonInfo(id) {
     const data = await fetchPokemonData(url);
     const pokemonData = await createPokemonData(data);
     pokemonCache.set(id, pokemonData);
-    displayCard(pokemonData);
+    
     return pokemonData;
   } catch (error) {
     console.error('Error fetching Pokemon info:', error);
@@ -211,6 +153,7 @@ async function getPokemonInfo(id) {
   }
 }
 
+// create the pokemonData within this function
 async function createPokemonData(data) {
   try {
     const pokemonData = {
@@ -252,12 +195,7 @@ async function createPokemonData(data) {
 
 
 
-/**
- * attack, defense, sprite, and types.
- * @param pokemonData - The `pokemonData` parameter is an object that contains information about a
- * specific Pokemon. It includes properties such as `name`, `attack`, `defense`, `frontDefaultSprite`,
- * and `types`.
- */
+//Display the pokemon in Card and Modal
 const pokemonContainer = document.getElementById("pokemonContainer");
 async function displayCard(pokemonData){
    
@@ -267,7 +205,7 @@ async function displayCard(pokemonData){
     pokemonCard.classList.add("pokemonCard");
   
     const pokemonName = pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1);
-    
+    //Initialize all the pokemonData comes from pokeAPI
     const attack = pokemonData.attack;
     const defense = pokemonData.defense;
     const speed = pokemonData.speed;
@@ -280,6 +218,8 @@ async function displayCard(pokemonData){
     const pokemonWeight = pokemonData.weight;
     const pokemonHeight = pokemonData.height;
     const specialMove = pokemonData.specialMove.charAt(0).toUpperCase() + pokemonData.specialMove.slice(1).replace(/-/g, ' ');
+
+    // this takes the color of the types and return a div element
     const typesDiv = pokemonData.types.map((element) => {
       const type = document.createElement("div")
       type.textContent = element;
@@ -290,7 +230,7 @@ async function displayCard(pokemonData){
   }).join(" ");
   
   
-
+    // Card Content
     const pokemonCardInnerHTML= ` <div class="pokemon-info">
     <div class="pokemon-stats">
       <h2 id="pokemonName">${pokemonName}</h2>
@@ -313,15 +253,25 @@ async function displayCard(pokemonData){
     </div>`
 
     pokemonCard.innerHTML  = pokemonCardInnerHTML;
+
+    // PokemonCard set animation
     pokemonCard.setAttribute("data-aos","fade-up");
+
+    //Modal Card
     pokemonCard.addEventListener("click",() => {
       var modal = document.getElementById("myModal");
+
+      // not iterate the pokemon modal
       modal.innerHTML = "";
+
+      // create modal card Element
       const modalCard = document.createElement("div");
       modalCard.classList.add("modal-content");
       modal.appendChild(modalCard);
-    
+      
+      //add the pokemon sound
       const cryAudio = new Audio(pokemonCry);
+      //dipslay the pokemon type and apply according to type
       const typesDivModal = pokemonData.types.map((element) => {
         const type = document.createElement("div");
         type.textContent = element;
@@ -331,6 +281,7 @@ async function displayCard(pokemonData){
         return `<div class="modal-type" style="background-color:${color};">${element}</div>`;
       }).join(" ");
     
+      //add content of my modal and apply the pokemon Data
       const modalContent = `
         <span class="close">&times;</span>
         <div class="modal-content__card">
@@ -394,14 +345,18 @@ async function displayCard(pokemonData){
           </div>
         </div>
       `;
-    
+      
+      // display the modal also play the pokemon sound
       modal.style.display = "block";
       document.body.style.overflow = "hidden";
       cryAudio.play();
     
       modalCard.innerHTML = modalContent;
+      // set the background according to the pokemon type
       modalCard.style.backgroundColor = backgroundColor;
     
+
+
       //close btn
       const closeBtn = modal.querySelector(".close");
       closeBtn.addEventListener("click", function() {
@@ -410,14 +365,15 @@ async function displayCard(pokemonData){
         cryAudio.pause();
       });
     });
-    
+    //this function is for animation on displaying the card
     AOS.init();
    
     const firstType = pokemonData.types[0]; // Assuming types is an array of type strings
     const backgroundColor = getPokemonColor(firstType);
     const progressColor = getBackgroundPokemonColor(firstType)
     pokemonCard.style.background = `linear-gradient(to right, #F6F7F9 59%, ${backgroundColor} 50%)`;
-    
+
+    //Validate the pokemon Card
     if (pokemonContainer) {
       pokemonContainer.appendChild(pokemonCard);
     } else {
@@ -433,14 +389,7 @@ async function displayCard(pokemonData){
 
 
 
-/**
- * The function `getPokemonColor` takes a type of Pokemon as input and returns the corresponding color
- * code.
- * @param type - The `type` parameter is a string that represents the type of a Pokémon.
- * @returns a color code in hexadecimal format based on the input type. If the input type matches one
- * of the known types, the corresponding color code is returned. If the input type is unknown, the
- * function returns black (#000000).
- */
+//function to return the pokemon type color
 function getPokemonColor(type){
   switch (type.toLowerCase()) {
     case 'normal':
@@ -483,7 +432,7 @@ function getPokemonColor(type){
       return '#000000'; // Return black for unknown types
   }
 }
-
+//function to return the pokemon type color of background
 function getBackgroundPokemonColor(type){
   switch (type.toLowerCase()) {
     case 'normal':
@@ -536,6 +485,13 @@ pokemonTypeFilter.addEventListener("change", async function() {
 
 const pokemonNames = [];
 
+/**
+ * The `pokemonFilter` function filters and displays Pokemon based on a specified type using data
+ * fetched from the PokeAPI.
+ * @param pokemonType - The `pokemonType` parameter is the type of Pokemon you want to filter by. It
+ * can be a specific type like "fire", "water", "grass", etc., or it can be set to "all" to display all
+ * types of Pokemon.
+ */
 async function pokemonFilter(pokemonType) {
   pokemonContainer.innerHTML = "";
   pokemonNames.length = 0;
@@ -549,7 +505,7 @@ async function pokemonFilter(pokemonType) {
     await Promise.all(
       allPokemon.map(async pokemon => {
         const id = pokemon.url.split('/').slice(-2, -1)[0];
-        const pokemonData = await getPokemonDataForFilter(id);
+        const pokemonData = await getPokemonInfo(id);
         const hasDesiredType = pokemonData.types && pokemonData.types.some(type => type === pokemonType);
 
         if (hasDesiredType || pokemonType === "all") {
@@ -576,11 +532,15 @@ filterationForm.addEventListener("submit", async (event) => {
   pokemonContainer.innerHTML = "";
 
   try {
+    //convert the input into lower case
     const pokemon = searchPokemon.value.toLowerCase();
-    await getPokemonInfo(pokemon);
+    //get the pokemon Data
+   const pokemonCard = await getPokemonInfo(pokemon);
+   //display on the card
+   displayCard(pokemonCard)
     loadMoreBtn.style.display = "none";
   } catch (error) {
-    console.error(error);
+    console.error(`Cant fetch the pokemon: ${error}`);
   }
 });
 
