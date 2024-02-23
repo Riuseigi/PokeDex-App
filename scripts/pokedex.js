@@ -81,7 +81,7 @@ async function fetchAndDisplayPokemons(page){
     }
     await Promise.all(promises)
 } catch (error) {
-  
+
     console.error('Error fetching and displaying pokemons:', error);
 }
 }
@@ -143,7 +143,7 @@ async function getPokemonCount() {
     return pokemonCount;
   } catch (error) {
     console.error('Error fetching Pokémon count:', error);
-    
+    displayErrorImage()
     throw error;
    
   }
@@ -167,47 +167,10 @@ async function fetchPokemonData(url) {
     }
     return await response.json();
   } catch (error) {
+    displayErrorImage()
     console.error('Error fetching data:', error);
     throw error;
-  }
-}
-
-
-
-async function getPokemonInfo(id) {
-  const pokemonCache = new Map();
-  try {
-    if (pokemonCache.has(id)) {
-      return pokemonCache.get(id);
-    }
-    const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
-    const data = await fetchPokemonData(url);
-    const pokemonData = {
-      name: data.name,
-      id: data.id,
-      attack: data.stats.find(stat => stat.stat.name === 'attack').base_stat,
-      defense: data.stats.find(stat => stat.stat.name === 'defense').base_stat,
-      speed: data.stats.find(stat => stat.stat.name === 'speed').base_stat,
-      specialAttack: data.stats.find(stat => stat.stat.name === 'special-attack').base_stat,
-      specialDefense: data.stats.find(stat => stat.stat.name === 'special-defense').base_stat,
-      specialMove: data.moves.find(move => move.version_group_details[0].move_learn_method.name === 'level-up').move.name,
-      types: data.types.map(type => type.type.name),
-      frontDefaultSprite: data.sprites.other['official-artwork'].front_default,
-      cry: data.cries.latest,
-      weight: data.weight, 
-      height: data.height 
-    };
-    const speciesUrl = data.species.url;
-    const speciesResponse = await fetch(speciesUrl);
-    const speciesData = await speciesResponse.json();
-    const description = speciesData.flavor_text_entries.find(entry => entry.language.name === 'en').flavor_text;
-    const cleanedDescription = description.replace(/[\u0000-\u001F]/g, ' ');
-    pokemonData.description = cleanedDescription;
-    pokemonCache.set(id, pokemonData);
-    displayCard(pokemonData);
-  } catch (error) {
-    console.error('Error fetching Pokemon info:', error);
-    throw error;
+   
   }
 }
 
@@ -217,45 +180,91 @@ async function getPokemonDataForFilter(id) {
     if (pokemonCache.has(id)) {
       return pokemonCache.get(id);
     }
-    const url = `https://pokeapi.co/api/v2/pokemon/${id}`
-  
+    const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
     const data = await fetchPokemonData(url);
-    
-    const pokemonData = {
-      name: data.name,
-      attack: data.stats.find(stat => stat.stat.name === 'attack').base_stat,
-      defense: data.stats.find(stat => stat.stat.name === 'defense').base_stat,
-      types: data.types.map(type => type.type.name),
-      frontDefaultSprite: data.sprites.other['official-artwork'].front_default
-    };
+    const pokemonData = await createPokemonData(data);
     pokemonCache.set(id, pokemonData);
     return pokemonData;
-
-   
   } catch (error) {
-    
     console.error('Error fetching Pokemon info:', error);
-    throw error;
+    return []; // Return empty array if Pokemon data cannot be fetched
+    
     
   }
 }
 
+async function getPokemonInfo(id) {
+  const pokemonCache = new Map();
+  try {
+    if (pokemonCache.has(id)) {
+      return pokemonCache.get(id);
+    }
+    const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
+    const data = await fetchPokemonData(url);
+    const pokemonData = await createPokemonData(data);
+    pokemonCache.set(id, pokemonData);
+    displayCard(pokemonData);
+    return pokemonData;
+  } catch (error) {
+    console.error('Error fetching Pokemon info:', error);
+    throw error;
+  }
+}
+
+async function createPokemonData(data) {
+  try {
+    const pokemonData = {
+      name: data.name,
+      id: data.id,
+      attack: data.stats.find(stat => stat.stat.name === 'attack').base_stat,
+      defense: data.stats.find(stat => stat.stat.name === 'defense').base_stat,
+      speed: data.stats.find(stat => stat.stat.name === 'speed').base_stat,
+      specialAttack: data.stats.find(stat => stat.stat.name === 'special-attack').base_stat,
+      specialDefense: data.stats.find(stat => stat.stat.name === 'special-defense').base_stat,
+      types: data.types.map(type => type.type.name),
+      frontDefaultSprite: data.sprites.other['official-artwork'].front_default,
+      cry: data.cries.latest,
+      weight: data.weight, 
+      height: data.height 
+    };
+  
+    // Check if moves array is not empty before accessing move property
+    if (data.moves.length > 0) {
+      pokemonData.specialMove = data.moves.find(move => move.version_group_details[0].move_learn_method.name === 'level-up').move.name;
+    } else {
+      pokemonData.specialMove = "Unknown"; // or any default value
+    }
+  
+    const speciesUrl = data.species.url;
+    const speciesResponse = await fetch(speciesUrl);
+    const speciesData = await speciesResponse.json();
+    const description = speciesData.flavor_text_entries.find(entry => entry.language.name === 'en')?.flavor_text || '';
+    const cleanedDescription = description.replace(/[\u0000-\u001F]/g, ' ');
+    pokemonData.description = cleanedDescription;
+    
+    return pokemonData;
+  } catch (error) {
+    console.error(`Cant create pokemon data: ${error}`)
+  }
+  
+}
+
+
+
 
 /**
- * The function `displayCard` creates and displays a Pokemon card with information such as name,
  * attack, defense, sprite, and types.
  * @param pokemonData - The `pokemonData` parameter is an object that contains information about a
  * specific Pokemon. It includes properties such as `name`, `attack`, `defense`, `frontDefaultSprite`,
  * and `types`.
  */
-const pokemonCard = document.createElement('div')
+
 async function displayCard(pokemonData){
    
   try {
    
-    const pokemonCard = document.createElement('div')
-   
-    pokemonCard.classList.add("pokemonCard")
+    const pokemonCard = document.createElement('div');
+    pokemonCard.classList.add("pokemonCard");
   
     const pokemonName = pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1);
     
@@ -308,112 +317,100 @@ async function displayCard(pokemonData){
     pokemonCard.addEventListener("click",() => {
       var modal = document.getElementById("myModal");
       modal.innerHTML = "";
-      const modalCard = document.createElement("div")
-      modalCard.classList.add("modal-content")
-      modal.appendChild(modalCard)
+      const modalCard = document.createElement("div");
+      modalCard.classList.add("modal-content");
+      modal.appendChild(modalCard);
+    
       const cryAudio = new Audio(pokemonCry);
       const typesDivModal = pokemonData.types.map((element) => {
-        const type = document.createElement("div")
+        const type = document.createElement("div");
         type.textContent = element;
-        type.classList.add("type1")
-        const color = getPokemonColor(element)
+        type.classList.add("type1");
+        const color = getPokemonColor(element);
         type.style.backgroundColor = color;
-        return `<div class="modal-type" style="background-color:${color};">${element}</div>`
-    }).join(" ");
+        return `<div class="modal-type" style="background-color:${color};">${element}</div>`;
+      }).join(" ");
     
-      
       const modalContent = `
-      <span class="close">&times;</span>
-      <div class="modal-content__card">
-        
-      <div id="imageSprite" class="modal-content__imageSprite">
-      <img class="pokeball" src="./img/pokeball-background.svg" alt="" srcset="">
-        <img class="pokemon" src="${spriteUrl}" alt="" >
-        
-        </div>
-        
-        <div class="pokemonInfo ">
-          <div class="pokemonID">
-            <div class="pokemonName">${pokemonName}<span class="id" style="background-color:${backgroundColor}">${id}</span></div>
-        </div>
-          <div class="modal-types">
-            ${typesDivModal}
+        <span class="close">&times;</span>
+        <div class="modal-content__card">
+          <div id="imageSprite" class="modal-content__imageSprite">
+            <img class="pokeball" src="./img/pokeball-background.svg" alt="" srcset="">
+            <img class="pokemon" src="${spriteUrl}" alt="">
           </div>
-           
+          <div class="pokemonInfo ">
+            <div class="pokemonID">
+              <div class="pokemonName">${pokemonName}<span class="id" style="background-color:${backgroundColor}">${id}</span></div>
+            </div>
+            <div class="modal-types">
+              ${typesDivModal}
+            </div>
             <h1 class="headText" style="color:${backgroundColor}">About</h1>
             <div class="pokemon_about">
-                
-                <div class="pokemon_weight">
-
-                  <div class="icon">
-                    <img src="./img/weight.svg" alt="">
-                    <p>${pokemonWeight}g</p>
-                  </div>
-                  <div class="label">Weight</div>
+              <div class="pokemon_weight">
+                <div class="icon">
+                  <img src="./img/weight.svg" alt="">
+                  <p>${pokemonWeight}g</p>
                 </div>
-                <div class="pokemon_height">
-                  <div class="icon">
-                    <img src="./img/height.svg" alt="weight icon" >
-                    <p>${pokemonHeight}cm</p>
-                    </div>
-                  <div class="label">Height</div>
+                <div class="label">Weight</div>
+              </div>
+              <div class="pokemon_height">
+                <div class="icon">
+                  <img src="./img/height.svg" alt="weight icon" >
+                  <p>${pokemonHeight}cm</p>
                 </div>
-                <div class="special-moves">
-                  <img src="./img/move.svg" alt="">
-                  <p class="move">${specialMove}</p>
-                  <div class="label">Move</div>
-                </div>
+                <div class="label">Height</div>
+              </div>
+              <div class="special-moves">
+                <img src="./img/move.svg" alt="">
+                <p class="move">${specialMove}</p>
+                <div class="label">Move</div>
+              </div>
             </div>
             <p class="pokemon_description">${description}</p>
             <h1 class="headText" style="color:${backgroundColor}">Base Stats</h1>
             <div class="base-stats">
-                
               <div class="stat">
-              <div class="stats-label" style="color:${backgroundColor}">ATK <span>${attack}</span></div>
-              <div class="bar" style="background-color:${progressColor}"><div class="progress" style="width: ${attack}%; background-color: ${backgroundColor};"></div></div>
+                <div class="stats-label" style="color:${backgroundColor}">ATK <span>${attack}</span></div>
+                <div class="bar" style="background-color:${progressColor}"><div class="progress" style="width: ${attack}%; background-color: ${backgroundColor};"></div></div>
+              </div>
+              <div class="stat">
+                <div class="stats-label" style="color:${backgroundColor}">DEF <span>${defense}</span></div>
+                <div class="bar" style="background-color:${progressColor}"><div class="progress" style="width: ${defense}%; background-color: ${backgroundColor};"></div></div>
+              </div>
+              <div class="stat">
+                <div class="stats-label" style="color:${backgroundColor}">SPD <span>${speed}</span></div>
+                <div class="bar" style="background-color:${progressColor}"><div class="progress" style="width: ${speed}%; background-color: ${backgroundColor};"></div></div>
+              </div>
+              <div class="stat">
+                <div class="stats-label" style="color:${backgroundColor}">SATK <span>${specialAttack}</span></div>
+                <div class="bar" style="background-color:${progressColor}"><div class="progress" style="width: ${specialAttack}%; background-color: ${backgroundColor};"></div></div>
+              </div>
+              <div class="stat">
+                <div class="stats-label" style="color:${backgroundColor}">SDEF <span>${specialDefense}</span></div>
+                <div class="bar" style="background-color:${progressColor}"><div class="progress" style="width: ${specialDefense}%; background-color: ${backgroundColor};"></div></div>
+              </div>
             </div>
-            <div class="stat">
-              <div class="stats-label" style="color:${backgroundColor}">DEF <span>${defense}</span></div>
-              <div class="bar"style="background-color:${progressColor}"><div class="progress" style="width: ${defense}%; background-color: ${backgroundColor};"></div></div>
-            </div>
-            <div class="stat">
-              <div class="stats-label" style="color:${backgroundColor}">SPD <span>${speed}</span></div>
-              <div class="bar"style="background-color:${progressColor}"><div class="progress" style="width: ${speed}%; background-color: ${backgroundColor};"></div></div>
-            </div>
-            <div class="stat">
-              <div class="stats-label" style="color:${backgroundColor}">SATK <span>${specialAttack}</span></div>
-              <div class="bar"style="background-color:${progressColor}"><div class="progress" style="width: ${specialAttack}%; background-color: ${backgroundColor};"></div></div>
-            </div>
-            <div class="stat">
-              <div class="stats-label" style="color:${backgroundColor}">SDEF <span>${specialDefense}</span></div>
-              <div class="bar"style="background-color:${progressColor}"><div class="progress" style="width: ${specialDefense}%; background-color: ${backgroundColor};"></div></div>
-            </div>
-            </div>
+          </div>
         </div>
-     
-    </div>
- `
-
-
- 
+      `;
+    
       modal.style.display = "block";
       document.body.style.overflow = "hidden";
       cryAudio.play();
-     
     
       modalCard.innerHTML = modalContent;
       modalCard.style.backgroundColor = backgroundColor;
-
-
-
+    
       //close btn
       const closeBtn = modal.querySelector(".close");
       closeBtn.addEventListener("click", function() {
         modal.style.display = "none";
-        document.body.style.overflow = "auto"
-        cryAudio.pause()
+        document.body.style.overflow = "auto";
+        cryAudio.pause();
       });
     });
+    
     AOS.init();
    
     const firstType = pokemonData.types[0]; // Assuming types is an array of type strings
@@ -421,8 +418,11 @@ async function displayCard(pokemonData){
     const progressColor = getBackgroundPokemonColor(firstType)
     pokemonCard.style.background = `linear-gradient(to right, #F6F7F9 59%, ${backgroundColor} 50%)`;
     
-    pokemonContainer.appendChild(pokemonCard)
-    
+    if (pokemonContainer) {
+      pokemonContainer.appendChild(pokemonCard);
+    } else {
+      console.error("pokemonContainer not found");
+    }
   } catch (error) {
       console.error(`Can fetch the Data :${error}`)
       
@@ -529,15 +529,16 @@ function getBackgroundPokemonColor(type){
 
 //Filteration
 const pokemonTypeFilter = document.getElementById("pokemonTypeFilter");
-pokemonTypeFilter.addEventListener("change",function() {
+pokemonTypeFilter.addEventListener("change", async function() {
   const selectedType = this.value;
-  pokemonFilter(selectedType)
+  await pokemonFilter(selectedType);
 });
+
 const pokemonNames = [];
+
 async function pokemonFilter(pokemonType) {
   pokemonContainer.innerHTML = "";
-  pokemonNames.length = 0; // Clear the pokemonNames array
-
+  pokemonNames.length = 0;
   try {
     let url = `https://pokeapi.co/api/v2/pokemon?limit=2000`;
 
@@ -545,27 +546,23 @@ async function pokemonFilter(pokemonType) {
     const allPokemon = data.results;
 
     // Filter Pokemon by type
-    allPokemon.forEach(pokemon => {
-      const id = pokemon.url.split('/').slice(-2, -1)[0];
-      pokemonNames.push(id);
-    });
+    await Promise.all(
+      allPokemon.map(async pokemon => {
+        const id = pokemon.url.split('/').slice(-2, -1)[0];
+        const pokemonData = await getPokemonDataForFilter(id);
+        const hasDesiredType = pokemonData.types && pokemonData.types.some(type => type === pokemonType);
 
-    const promises = pokemonNames.map(async id => {
-      const pokemonData = await getPokemonDataForFilter(id);
-      const hasDesiredType = pokemonData.types.some(type => type === pokemonType);
-      if (hasDesiredType || pokemonType === "all") {
-        displayCard(pokemonData);
-      }
-    });
-
-    await Promise.all(promises);
+        if (hasDesiredType || pokemonType === "all") {
+          displayCard(pokemonData);
+        }
+      })
+    );
 
     loadMoreBtn.style.display = "none";
   } catch (error) {
     console.error("Error filtering Pokemons:", error);
   }
 }
-
 
 // Search Pokemon
 
@@ -575,36 +572,17 @@ const filterationForm = document.querySelector(".filteration")
 const errorImage = document.querySelector(".errorImage")
 
 filterationForm.addEventListener("submit", async (event) => {
-    event.preventDefault()
-    pokemonContainer.innerHTML = "";
-    
-    try {
-      
-      const pokemon = searchPokemon.value.toLowerCase()
-      const pokemonName = await getPokemonInfo(pokemon)
-      if(pokemon ===""){
-        pokemonContainer.innerHTML = `<img src="./img/teamRocket.png" alt="" class="errorImage">
-        `
-        loadMoreBtn.style.display = "none";
-      } else{
-        
-      
-      
-      displayCard(pokemonName)
-      
-  
-      loadMoreBtn.style.display = "none"
-      }
-      
-    
-    } catch (error) {
-      console.error(error)
- 
-      
-    }
-  
-})
+  event.preventDefault();
+  pokemonContainer.innerHTML = "";
 
+  try {
+    const pokemon = searchPokemon.value.toLowerCase();
+    await getPokemonInfo(pokemon);
+    loadMoreBtn.style.display = "none";
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 const loadMoreBtn = document.getElementById('loadMoreBtn');
 displayErrorImage =() => {
