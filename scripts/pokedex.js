@@ -1,5 +1,5 @@
-const pokemonContainer = document.getElementById("pokemonContainer");
-let hasError = false
+
+
 
 
 
@@ -258,7 +258,7 @@ async function createPokemonData(data) {
  * specific Pokemon. It includes properties such as `name`, `attack`, `defense`, `frontDefaultSprite`,
  * and `types`.
  */
-
+const pokemonContainer = document.getElementById("pokemonContainer");
 async function displayCard(pokemonData){
    
   try {
@@ -585,6 +585,7 @@ filterationForm.addEventListener("submit", async (event) => {
 });
 
 const loadMoreBtn = document.getElementById('loadMoreBtn');
+let hasError = false
 displayErrorImage =() => {
  pokemonContainer.innerHTML = `<img src="./img/teamRocket.png" alt="" class="errorImage">
   `
