@@ -261,6 +261,9 @@ async function displayCard(pokemonData){
     
     const attack = pokemonData.attack;
     const defense = pokemonData.defense;
+    const speed = pokemonData.speed;
+    const specialAttack = pokemonData.specialAttack;
+    const specialDefense = pokemonData.specialDefense;
     const spriteUrl = pokemonData.frontDefaultSprite;
     const id = pokemonData.id;
     const description = pokemonData.description;
@@ -366,28 +369,25 @@ async function displayCard(pokemonData){
             <div class="base-stats">
                 
               <div class="stat">
-                <div class="stats-label">ATK <span>34</span></div>
-                
-                <div class="bar"><div class="progress" style="width: 80%;"></div></div>
-              </div>
-              <div class="stat">
-                <div class="stats-label">DEF <span>34</span></div>
-                <div class="bar"><div class="progress" style="width: 70%;"></div></div>
-              </div>
-              <div class="stat">
-                <div class="stats-label">SPD <span>34</span></div>
-                <div class="bar"><div class="progress" style="width: 60%;"></div></div>
-              </div>
-
-              <div class="stat">
-                <div class="stats-label">SATK <span>34</span></div>
-                <div class="bar"><div class="progress" style="width: 90%;"></div></div>
-              </div>
-              <div class="stat">
-                <div class="stats-label">SDEF <span>34</span></div>
-                
-                <div class="bar"><div class="progress" style="width: 85%;"></div></div>
-              </div>
+              <div class="stats-label" style="color:${backgroundColor}">ATK <span>${attack}</span></div>
+              <div class="bar" style="background-color:${progressColor}"><div class="progress" style="width: ${attack}%; background-color: ${backgroundColor};"></div></div>
+            </div>
+            <div class="stat">
+              <div class="stats-label" style="color:${backgroundColor}">DEF <span>${defense}</span></div>
+              <div class="bar"style="background-color:${progressColor}"><div class="progress" style="width: ${defense}%; background-color: ${backgroundColor};"></div></div>
+            </div>
+            <div class="stat">
+              <div class="stats-label" style="color:${backgroundColor}">SPD <span>${speed}</span></div>
+              <div class="bar"style="background-color:${progressColor}"><div class="progress" style="width: ${speed}%; background-color: ${backgroundColor};"></div></div>
+            </div>
+            <div class="stat">
+              <div class="stats-label" style="color:${backgroundColor}">SATK <span>${specialAttack}</span></div>
+              <div class="bar"style="background-color:${progressColor}"><div class="progress" style="width: ${specialAttack}%; background-color: ${backgroundColor};"></div></div>
+            </div>
+            <div class="stat">
+              <div class="stats-label" style="color:${backgroundColor}">SDEF <span>${specialDefense}</span></div>
+              <div class="bar"style="background-color:${progressColor}"><div class="progress" style="width: ${specialDefense}%; background-color: ${backgroundColor};"></div></div>
+            </div>
             </div>
         </div>
      
@@ -400,8 +400,7 @@ async function displayCard(pokemonData){
       document.body.style.overflow = "hidden";
       cryAudio.play();
      
-      
-      
+    
       modalCard.innerHTML = modalContent;
       modalCard.style.backgroundColor = backgroundColor;
 
@@ -419,6 +418,7 @@ async function displayCard(pokemonData){
    
     const firstType = pokemonData.types[0]; // Assuming types is an array of type strings
     const backgroundColor = getPokemonColor(firstType);
+    const progressColor = getBackgroundPokemonColor(firstType)
     pokemonCard.style.background = `linear-gradient(to right, #F6F7F9 59%, ${backgroundColor} 50%)`;
     
     pokemonContainer.appendChild(pokemonCard)
