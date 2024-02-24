@@ -217,6 +217,8 @@ async function displayCard(pokemonData){
     const pokemonCry  = pokemonData.cry;
     const pokemonWeight = pokemonData.weight;
     const pokemonHeight = pokemonData.height;
+    const firstType = pokemonData.types[0]; // Assuming types is an array of type strings
+    const pokemonColor = getPokemonColors(firstType);
     const specialMove = pokemonData.specialMove.charAt(0).toUpperCase() + pokemonData.specialMove.slice(1).replace(/-/g, ' ');
 
     // this takes the color of the types and return a div element
@@ -224,9 +226,9 @@ async function displayCard(pokemonData){
       const type = document.createElement("div")
       type.textContent = element;
       type.classList.add("type1")
-      const color = getPokemonColor(element)
+      const color = getPokemonColors(element)
       type.style.backgroundColor = color;
-      return `<div class="type" style="background-color:${color};">${element}</div>`
+      return `<div class="type" style="background-color:${color.color};">${element}</div>`
   }).join(" ");
   
   
@@ -276,9 +278,8 @@ async function displayCard(pokemonData){
         const type = document.createElement("div");
         type.textContent = element;
         type.classList.add("type1");
-        const color = getPokemonColor(element);
-        type.style.backgroundColor = color;
-        return `<div class="modal-type" style="background-color:${color};">${element}</div>`;
+        type.style.backgroundColor = pokemonColor.color;
+        return `<div class="modal-type" style="background-color:${pokemonColor.color};">${element}</div>`;
       }).join(" ");
     
       //add content of my modal and apply the pokemon Data
@@ -291,12 +292,12 @@ async function displayCard(pokemonData){
           </div>
           <div class="pokemonInfo ">
             <div class="pokemonID">
-              <div class="pokemonName">${pokemonName}<span class="id" style="background-color:${backgroundColor}">${id}</span></div>
+              <div class="pokemonName">${pokemonName}<span class="id" style="background-color:${pokemonColor.color}">${id}</span></div>
             </div>
             <div class="modal-types">
               ${typesDivModal}
             </div>
-            <h1 class="headText" style="color:${backgroundColor}">About</h1>
+            <h1 class="headText" style="color:${pokemonColor.color}">About</h1>
             <div class="pokemon_about">
               <div class="pokemon_weight">
                 <div class="icon">
@@ -319,27 +320,27 @@ async function displayCard(pokemonData){
               </div>
             </div>
             <p class="pokemon_description">${description}</p>
-            <h1 class="headText" style="color:${backgroundColor}">Base Stats</h1>
+            <h1 class="headText" style="color:${pokemonColor.color}">Base Stats</h1>
             <div class="base-stats">
               <div class="stat">
-                <div class="stats-label" style="color:${backgroundColor}">ATK <span>${attack}</span></div>
-                <div class="bar" style="background-color:${progressColor}"><div class="progress" style="width: ${attack}%; background-color: ${backgroundColor};"></div></div>
+                <div class="stats-label" style="color:${pokemonColor.color}">ATK <span>${attack}</span></div>
+                <div class="bar" style="background-color:${pokemonColor.backgroundColor}"><div class="progress" style="width: ${attack}%; background-color: ${pokemonColor.color};"></div></div>
               </div>
               <div class="stat">
-                <div class="stats-label" style="color:${backgroundColor}">DEF <span>${defense}</span></div>
-                <div class="bar" style="background-color:${progressColor}"><div class="progress" style="width: ${defense}%; background-color: ${backgroundColor};"></div></div>
+                <div class="stats-label" style="color:${pokemonColor.color}">DEF <span>${defense}</span></div>
+                <div class="bar" style="background-color:${pokemonColor.backgroundColor}"><div class="progress" style="width: ${defense}%; background-color: ${pokemonColor.color};"></div></div>
               </div>
               <div class="stat">
-                <div class="stats-label" style="color:${backgroundColor}">SPD <span>${speed}</span></div>
-                <div class="bar" style="background-color:${progressColor}"><div class="progress" style="width: ${speed}%; background-color: ${backgroundColor};"></div></div>
+                <div class="stats-label" style="color:${pokemonColor.color}">SPD <span>${speed}</span></div>
+                <div class="bar" style="background-color:${pokemonColor.backgroundColor}"><div class="progress" style="width: ${speed}%; background-color: ${pokemonColor.color};"></div></div>
               </div>
               <div class="stat">
-                <div class="stats-label" style="color:${backgroundColor}">SATK <span>${specialAttack}</span></div>
-                <div class="bar" style="background-color:${progressColor}"><div class="progress" style="width: ${specialAttack}%; background-color: ${backgroundColor};"></div></div>
+                <div class="stats-label" style="color:${pokemonColor.color}">SATK <span>${specialAttack}</span></div>
+                <div class="bar" style="background-color:${pokemonColor.backgroundColor}"><div class="progress" style="width: ${specialAttack}%; background-color: ${pokemonColor.color};"></div></div>
               </div>
               <div class="stat">
-                <div class="stats-label" style="color:${backgroundColor}">SDEF <span>${specialDefense}</span></div>
-                <div class="bar" style="background-color:${progressColor}"><div class="progress" style="width: ${specialDefense}%; background-color: ${backgroundColor};"></div></div>
+                <div class="stats-label" style="color:${pokemonColor.color}">SDEF <span>${specialDefense}</span></div>
+                <div class="bar" style="background-color:${pokemonColor.backgroundColor}"><div class="progress" style="width: ${specialDefense}%; background-color: ${pokemonColor.color};"></div></div>
               </div>
             </div>
           </div>
@@ -353,7 +354,7 @@ async function displayCard(pokemonData){
     
       modalCard.innerHTML = modalContent;
       // set the background according to the pokemon type
-      modalCard.style.backgroundColor = backgroundColor;
+      modalCard.style.backgroundColor = pokemonColor.color;
     
 
 
@@ -368,10 +369,9 @@ async function displayCard(pokemonData){
     //this function is for animation on displaying the card
     AOS.init();
    
-    const firstType = pokemonData.types[0]; // Assuming types is an array of type strings
-    const backgroundColor = getPokemonColor(firstType);
-    const progressColor = getBackgroundPokemonColor(firstType)
-    pokemonCard.style.background = `linear-gradient(to right, #F6F7F9 59%, ${backgroundColor} 50%)`;
+    
+    
+    pokemonCard.style.background = `linear-gradient(to right, #F6F7F9 59%, ${pokemonColor.color} 50%)`;
 
     //Validate the pokemon Card
     if (pokemonContainer) {
@@ -388,91 +388,46 @@ async function displayCard(pokemonData){
 
 
 
-
-//function to return the pokemon type color
-function getPokemonColor(type){
+function getPokemonColors(type) {
   switch (type.toLowerCase()) {
     case 'normal':
-      return '#A8A878';
+      return { color: '#A8A878', backgroundColor: 'rgba(168, 168, 120, 0.2)' };
     case 'fire':
-      return '#F08030';
+      return { color: '#F08030', backgroundColor: 'rgba(240, 128, 48, 0.2)' };
     case 'water':
-      return '#6890F0';
+      return { color: '#6890F0', backgroundColor: 'rgba(104, 144, 240, 0.2)' };
     case 'electric':
-      return '#F8D030';
+      return { color: '#F8D030', backgroundColor: 'rgba(248, 208, 48, 0.2)' };
     case 'grass':
-      return '#78C850';
+      return { color: '#78C850', backgroundColor: 'rgba(120, 200, 80, 0.2)' };
     case 'ice':
-      return '#98D8D8';
+      return { color: '#98D8D8', backgroundColor: 'rgba(152, 216, 216, 0.2)' };
     case 'fighting':
-      return '#C03028';
+      return { color: '#C03028', backgroundColor: 'rgba(192, 48, 40, 0.2)' };
     case 'poison':
-      return '#A040A0';
+      return { color: '#A040A0', backgroundColor: 'rgba(160, 64, 160, 0.2)' };
     case 'ground':
-      return '#E0C068';
+      return { color: '#E0C068', backgroundColor: 'rgba(224, 192, 104, 0.2)' };
     case 'flying':
-      return '#A890F0';
+      return { color: '#A890F0', backgroundColor: 'rgba(168, 144, 240, 0.2)' };
     case 'psychic':
-      return '#F85888';
+      return { color: '#F85888', backgroundColor: 'rgba(248, 88, 136, 0.2)' };
     case 'bug':
-      return '#A8B820';
+      return { color: '#A8B820', backgroundColor: 'rgba(168, 184, 32, 0.2)' };
     case 'rock':
-      return '#B8A038';
+      return { color: '#B8A038', backgroundColor: 'rgba(184, 160, 56, 0.2)' };
     case 'ghost':
-      return '#705898';
+      return { color: '#705898', backgroundColor: 'rgba(112, 88, 152, 0.2)' };
     case 'dragon':
-      return '#7038F8';
+      return { color: '#7038F8', backgroundColor: 'rgba(112, 56, 248, 0.2)' };
     case 'dark':
-      return '#705848';
+      return { color: '#705848', backgroundColor: 'rgba(112, 88, 72, 0.2)' };
     case 'steel':
-      return '#B8B8D0';
+      return { color: '#B8B8D0', backgroundColor: 'rgba(184, 184, 208, 0.2)' };
     case 'fairy':
-      return '#EE99AC';
+      return { color: '#EE99AC', backgroundColor: 'rgba(238, 153, 172, 0.2)' };
     default:
-      return '#000000'; // Return black for unknown types
-  }
-}
-//function to return the pokemon type color of background
-function getBackgroundPokemonColor(type){
-  switch (type.toLowerCase()) {
-    case 'normal':
-      return 'rgba(168, 168, 120, 0.2)';
-    case 'fire':
-      return 'rgba(240, 128, 48, 0.2)';
-    case 'water':
-      return 'rgba(104, 144, 240, 0.2)';
-    case 'electric':
-      return 'rgba(248, 208, 48, 0.2)';
-    case 'grass':
-      return 'rgba(120, 200, 80, 0.2)';
-    case 'ice':
-      return 'rgba(152, 216, 216, 0.2)';
-    case 'fighting':
-      return 'rgba(192, 48, 40, 0.2)';
-    case 'poison':
-      return 'rgba(160, 64, 160, 0.2)';
-    case 'ground':
-      return 'rgba(224, 192, 104, 0.2)';
-    case 'flying':
-      return 'rgba(168, 144, 240, 0.2)';
-    case 'psychic':
-      return 'rgba(248, 88, 136, 0.2)';
-    case 'bug':
-      return 'rgba(168, 184, 32, 0.2)';
-    case 'rock':
-      return 'rgba(184, 160, 56, 0.2)';
-    case 'ghost':
-      return 'rgba(112, 88, 152, 0.2)';
-    case 'dragon':
-      return 'rgba(112, 56, 248, 0.2)';
-    case 'dark':
-      return 'rgba(112, 88, 72, 0.2)';
-    case 'steel':
-      return 'rgba(184, 184, 208, 0.2)';
-    case 'fairy':
-      return 'rgba(238, 153, 172, 0.2)';
-    default:
-      return 'rgba(0, 0, 0, 0.2)'; // Return black with 20% opacity for unknown types
+      return { color: '#000000', backgroundColor: 'rgba(0, 0, 0, 0.2)' }; // Return black for unknown types
   }
 }
 
