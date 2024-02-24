@@ -165,7 +165,7 @@ body{
 
 
 /* Main section area */
-.main-content{}
+
 .pokemons-container{
     display: flex;
     flex-wrap: wrap;
@@ -380,7 +380,7 @@ body{
   z-index: 2;
   position: absolute;
   max-height: 400px;
-  top: 1%;
+  top: 3%;
  -webkit-filter: drop-shadow(1px 1px 0 black)
                   drop-shadow(-1px -1px 0 black);
   filter: drop-shadow(1px 1px 0 rgb(156, 150, 150)) 
