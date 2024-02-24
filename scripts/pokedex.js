@@ -37,14 +37,14 @@ async function pokemonFilter(pokemonType) {
 
     const data = await fetchPokemonData(url);
     const allPokemon = data.results;
-
+   
     // Filter Pokemon by type
     await Promise.all(
       allPokemon.map(async pokemon => {
         const id = pokemon.url.split('/').slice(-2, -1)[0];
         const pokemonData = await getPokemonInfo(id);
         const hasDesiredType = pokemonData.types && pokemonData.types.some(type => type === pokemonType);
-
+        
         if (hasDesiredType || pokemonType === "all") {
           displayCard(pokemonData);
         }
