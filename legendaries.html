@@ -4,10 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Pokedex</title>
-    <link rel="stylesheet" href="./styles/pokedex.css" />
     <link rel="stylesheet" href="./styles/nav.css" />
+    <link rel="stylesheet" href="./styles/legendaries.css" />
+
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   </head>
+
   <body>
     <header>
       <nav class="navigation">
@@ -22,14 +24,41 @@
         <ul class="navLinks">
           <li><a href="index.html" class="nav-link">Home</a></li>
           <li><a href="pokedex.html" class="nav-link">Pokédex</a></li>
-          <li><a href="#" class="nav-link active">Legendaries</a></li>
+          <li><a href="#" class="nav-link">Legendaries</a></li>
         </ul>
       </nav>
     </header>
 
-    <section class="main-content"></section>
+    <section class="main-content">
+      <h1 class="head-line">Legendaries</h1>
+      <div class="pokemons-container" id="pokemonContainer">
+        <div class="carousel-container">
+          <div class="carousel-item">
+            <img src="./img/Pikachu.png" alt="Pokemon 1" />
+
+            <div class="pokemonInfo">
+              <h1 class="pokemonName">Pikachu <span>25</span></h1>
+              <div class="">
+                <p class="pokemon-description">
+                  Pikachu was designed around the concept of electricity. They
+                  are creatures that have short, yellow fur with brown markings
+                  covering their backs and parts of their lightning bolt-shaped
+                  tails. They have black-tipped, pointed ears and red circular
+                  pouches on their cheeks, which can spark with electricity.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-button prev">
+          <img src="./img/mingcute_left-fill.svg" alt="" srcset="" />
+        </button>
+        <button class="carousel-button next">
+          <img src="./img/mingcute_right-fill.svg" alt="" srcset="" />
+        </button>
+      </div>
+    </section>
   </body>
 
   <script src="./scripts/navBar.js"></script>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </html>
