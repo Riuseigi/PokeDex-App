@@ -174,7 +174,11 @@ body{
   gap: 10px;
   justify-content: center;
   align-items: center;
+<<<<<<< HEAD
   
+=======
+  padding: 20px 10px;
+>>>>>>> 809c68714b7085aff3272db92110ea07d5f569a0
 }
 .stats-label {
  
