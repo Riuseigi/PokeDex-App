@@ -1,13 +1,21 @@
 //Initialization
 import { getPokemonInfo } from './getPokemonInfo.js';
 import { displayCard } from './displayCard.js';
-
+const loader = document.getElementById('loader');
 const pokemonPerPage = 30;
 let currentPage = 1;
+function showLoader() {
+  loader.style.display = 'block';
+}
 
+// Hide the loader
+function hideLoader() {
+  loader.style.display = 'none';
+}
 // This function display the number of pokemon specified
 async function fetchAndDisplayPokemons(page){
   try {
+    showLoader();
     const startIndex = (page - 1) * pokemonPerPage + 1;
     const endIndex = startIndex + pokemonPerPage - 1;
    
@@ -18,6 +26,7 @@ async function fetchAndDisplayPokemons(page){
     (await Promise.all(promises)).forEach(pokemon =>{
       displayCard(pokemon)
     })
+    hideLoader();
 } catch (error) {
 
     console.error('Error fetching and displaying pokemons:', error);
