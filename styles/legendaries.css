@@ -75,7 +75,7 @@ body{
 .pokemonSprite-container .pokeballBG{
   position: absolute;
   bottom: 0%;
-  max-height: 400px;
+  height: 400px;
   overflow: visible;
 
 }
@@ -174,11 +174,8 @@ body{
   gap: 10px;
   justify-content: center;
   align-items: center;
-<<<<<<< HEAD
   
-=======
   padding: 20px 10px;
->>>>>>> 809c68714b7085aff3272db92110ea07d5f569a0
 }
 .stats-label {
  
@@ -206,7 +203,7 @@ body{
   background-color: #F9CF30;
   
 }
-@media all and (max-width: 768px){
+@media only screen and (max-width: 480px){
 
   .pokemonSprite{
     margin: 0;
@@ -215,7 +212,7 @@ body{
   .pokeballBG{
     top: 10%;
     left: 15%;
-    height:300px;
+    max-height:300px;
   }
   .base-stats{
     padding: 20px 10px;
