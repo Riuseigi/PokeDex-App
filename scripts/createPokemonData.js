@@ -13,7 +13,8 @@ export async function createPokemonData(data) {
         frontDefaultSprite: data.sprites.other['official-artwork'].front_default,
         cry: data.cries.latest,
         weight: data.weight, 
-        height: data.height 
+        height: data.height ,
+        spriteUrl : data.sprites.front_default
       };
     
       // Check if moves array is not empty before accessing move property
