@@ -46,7 +46,7 @@ body{
   max-width: 1200px; /* Set the maximum width as needed */
   margin: 0 auto;
   overflow: hidden;
-  
+  margin-bottom: 5%;
 }
 
 
@@ -55,7 +55,7 @@ body{
   display: flex;
   width: 100%;
   justify-content: center;
-  flex-wrap: wrap;
+
  
 }
 .pokemonSprite-container{
@@ -203,6 +203,44 @@ body{
   background-color: #F9CF30;
   
 }
+
+/* Carousel Navigation */
+.carousel-navigation{
+  font-family: var(--karlaFont);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 15px;
+}
+.pokemonCard{
+  width: 100px;
+  background: rgb(181,126,16);
+  background: linear-gradient(207deg, rgba(181,126,16,1) 25%, rgba(255,255,255,1) 75%);
+  padding: 10px;
+  border-radius: 20px;
+}
+.pokemonCard:hover {
+  transform: translateY(-5px);
+}
+.imageContainer{
+    height: 80px;
+    position: relative;
+  }
+.imageContainer img{
+  position: absolute;
+  top: -30%;
+  right: 0;
+  height: 90px;
+}
+.pokemonNameCard span{
+ 
+font-weight: bold;
+font-family: var(--soureSansFont);
+}
+
+
+
+
 @media only screen and (max-width: 480px){
 
   .pokemonSprite{
