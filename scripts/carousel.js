@@ -34,6 +34,33 @@ async function getLegendaryPokemon() {
         return pokemonData;
     });
     const pokemonDetails = await Promise.all(promises);
-    console.log(pokemonDetails);
+    pokemonDetails.forEach(pokemonDetails =>{
+        createCardNavigation(pokemonDetails)
+
+    })
 }
 getLegendaryPokemon()
+
+
+
+
+const navigationContainer = document.querySelector(".carousel-navigation")
+console.log(navigationContainer)
+const createCardNavigation = async (pokemon) =>{
+    const name = pokemon.name;
+    const spriteUrl = pokemon.spriteUrl;
+    const pokemonCardContent = document.createElement("div");
+    pokemonCardContent.classList.add("pokemonCard")
+    const cardContentInnerHtml = `
+    <div class="imageContainer">
+      <img src="${spriteUrl}" alt="" />
+    </div>
+    <div class="pokemonNameCard"><span>${name}</span></div>
+    `
+    pokemonCardContent.innerHTML = cardContentInnerHtml;
+
+    navigationContainer.appendChild(pokemonCardContent)
+
+
+
+}
