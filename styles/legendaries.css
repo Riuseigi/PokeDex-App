@@ -215,11 +215,12 @@ body{
   display: flex;
   grid-auto-columns: max-content;
   justify-content: start;
-  gap: 15px;
+  gap: 20px;
   width: 80%;
-  overflow: auto;
+  overflow: hidden;
 }
 .pokemonCard{
+  user-select: none; 
   flex: 0 0 auto;
   width: 100px; /* Set a fixed width */
   background: rgb(243, 243, 242);
@@ -262,5 +263,8 @@ font-family: var(--soureSansFont);
   }
   .base-stats{
     padding: 20px 10px;
+  }
+  .carousel-navigation{
+    width: 100%;
   }
 }

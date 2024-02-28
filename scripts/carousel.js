@@ -47,15 +47,15 @@ getLegendaryPokemon()
 const navigationContainer = document.querySelector(".carousel-navigation")
 console.log(navigationContainer)
 const createCardNavigation = async (pokemon) =>{
-    const name = pokemon.name;
+    const pokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
     const spriteUrl = pokemon.spriteUrl;
     const pokemonCardContent = document.createElement("div");
     pokemonCardContent.classList.add("pokemonCard")
     const cardContentInnerHtml = `
     <div class="imageContainer">
-      <img src="${spriteUrl}" alt="" />
+      <img src="${spriteUrl}" alt="" draggable="false"/>
     </div>
-    <div class="pokemonNameCard"><span>${name}</span></div>
+    <div class="pokemonNameCard"><span>${pokemonName}</span></div>
     `
     pokemonCardContent.innerHTML = cardContentInnerHtml;
 
@@ -64,3 +64,55 @@ const createCardNavigation = async (pokemon) =>{
 
 
 }
+
+
+let isDragging = false;
+let startPos = 0;
+let currentTranslate = 0;
+let prevTranslate = 0;
+
+navigationContainer.addEventListener('mousedown', startDrag);
+navigationContainer.addEventListener('touchstart', startDrag);
+
+navigationContainer.addEventListener('mousemove', drag);
+navigationContainer.addEventListener('touchmove', drag);
+
+navigationContainer.addEventListener('mouseup', endDrag);
+navigationContainer.addEventListener('mouseleave', endDrag);
+navigationContainer.addEventListener('touchend', endDrag);
+
+function startDrag(event) {
+    if (event.type === 'touchstart') {
+        startPos = event.touches[0].clientX;
+    } else {
+        startPos = event.clientX;
+    }
+    isDragging = true;
+    prevTranslate = currentTranslate;
+}
+
+function drag(event) {
+    if (isDragging) {
+        let currentPosition;
+        if (event.type === 'touchmove') {
+            currentPosition = event.touches[0].clientX;
+        } else {
+            currentPosition = event.clientX;
+        }
+        currentTranslate = prevTranslate + currentPosition - startPos;
+        setTranslate();
+    }
+}
+
+function setTranslate() {
+    navigationContainer.style.overflowX = 'hidden';
+    navigationContainer.style.scrollBehavior = 'auto';
+    navigationContainer.scrollLeft = -currentTranslate;
+}
+
+function endDrag() {
+    isDragging = false;
+    prevTranslate = currentTranslate;
+    navigationContainer.style.scrollBehavior = 'smooth';
+}
+
