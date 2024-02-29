@@ -1,5 +1,5 @@
 import { getPokemonInfo } from "./getPokemonInfo.js";
-
+import { getPokemonColors } from "./getPokemonColors.js";
 async function fetchLegendaryPokemon() {
     const response = await fetch('https://pokeapi.co/api/v2/pokemon/?limit=1000');
     const data = await response.json();
@@ -49,6 +49,31 @@ console.log(navigationContainer)
 const createCardNavigation = async (pokemon) =>{
     const pokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
     const spriteUrl = pokemon.spriteUrl;
+     //Initialize all the pokemonData comes from pokeAPI
+     const attack = pokemon.attack;
+     const defense = pokemon.defense;
+     const speed = pokemon.speed;
+     const specialAttack = pokemon.specialAttack;
+     const specialDefense = pokemon.specialDefense;
+    const artworkImage = pokemon.frontDefaultSprite;
+     const id = pokemon.id;
+     const description = pokemon.description;
+     const pokemonCry  = pokemon.cry;
+     const pokemonWeight = pokemon.weight;
+     const pokemonHeight = pokemon.height;
+     const firstType = pokemon.types[0]; // Assuming types is an array of type strings
+     const pokemonColor = getPokemonColors(firstType);
+     const specialMove = pokemon.specialMove.charAt(0).toUpperCase() + pokemon.specialMove.slice(1).replace(/-/g, ' ');
+     const cryAudio = new Audio(pokemonCry);
+     // this takes the color of the types and return a div element
+     const typesDiv = pokemon.types.map((element) => {
+       const type = document.createElement("div")
+       type.textContent = element;
+       
+       const color = getPokemonColors(element)
+       type.style.backgroundColor = color;
+       return `<div class="type" style="background-color:${color.color};">${element}</div>`
+   }).join(" ");
     const pokemonCardContent = document.createElement("div");
     pokemonCardContent.classList.add("pokemonCard")
     const cardContentInnerHtml = `
@@ -61,8 +86,109 @@ const createCardNavigation = async (pokemon) =>{
 
     navigationContainer.appendChild(pokemonCardContent)
 
+    pokemonCardContent.addEventListener("click",() => {
+      const carouselContainer = document.querySelector(".carousel-container")
+    cryAudio.play()
+      const carouselItemContent = `<div class="carousel-item">
+      <div class="pokemonSprite-container">
+        <img
+          src="./img/pokeball-background.svg"
+          alt=""
+          srcset="pokeball Backgrounnd"
+          class="pokeballBG"
+        />
+        <img
+          src="${artworkImage}"
+          alt="Pokemon 1"
+          class="pokemonSprite"
+        />
+      </div>
 
+      <div class="pokemonInfo">
+       
+        <h1 class="pokemonName">${pokemonName}<span style=" background-color:${pokemonColor.color}"  >25</span></h1>
+        <div class="types">${typesDiv}</div>
+        <p class="pokemon-description" style="color:${pokemonColor.color}">
+          ${description}
+        </p>
 
+        <div class="base-stats">
+          <div class="stat">
+            <div class="stats-label" style="color:${pokemonColor.color}">
+              ATK <span>${attack}</span>
+            </div>
+            <div
+              class="bar"
+              style="background-color:${pokemonColor.backgroundColor}"
+            >
+              <div
+                class="progress"
+                style="width: ${attack}%; background-color: ${pokemonColor.color};"
+              ></div>
+            </div>
+          </div>
+          <div class="stat">
+            <div class="stats-label" style="color:${pokemonColor.color}">
+              DEF <span>${defense}</span>
+            </div>
+            <div
+              class="bar"
+              style="background-color:${pokemonColor.backgroundColor}"
+            >
+              <div
+                class="progress"
+                style="width: ${defense}%; background-color: ${pokemonColor.color};"
+              ></div>
+            </div>
+          </div>
+          <div class="stat">
+            <div class="stats-label" style="color:${pokemonColor.color}">
+              SPD <span>${speed}</span>
+            </div>
+            <div
+              class="bar"
+              style="background-color:${pokemonColor.backgroundColor}"
+            >
+              <div
+                class="progress"
+                style="width: ${speed}%; background-color: ${pokemonColor.color};"
+              ></div>
+            </div>
+          </div>
+          <div class="stat">
+            <div class="stats-label" style="color:${pokemonColor.color}">
+              SATK <span>${specialAttack}</span>
+            </div>
+            <div
+              class="bar"
+              style="background-color:${pokemonColor.backgroundColor}"
+            >
+              <div
+                class="progress"
+                style="width: ${specialAttack}%; background-color: ${pokemonColor.color};"
+              ></div>
+            </div>
+          </div>
+          <div class="stat">
+            <div class="stats-label" style="color:${pokemonColor.color}">
+              SDEF <span>${specialDefense}</span>
+            </div>
+            <div
+              class="bar"
+              style="background-color:${pokemonColor.backgroundColor}"
+            >
+              <div
+                class="progress"
+                style="width: ${specialDefense}%; background-color: ${pokemonColor.color};"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`
+    carouselContainer.innerHTML = carouselItemContent;
+    })
+    cryAudio.stop()
 }
 
 
