@@ -106,7 +106,7 @@ const createCardNavigation = async (pokemon) =>{
 
       <div class="pokemonInfo">
        
-        <h1 class="pokemonName">${pokemonName}<span style=" background-color:${pokemonColor.color}"  >25</span></h1>
+        <h1 class="pokemonName">${pokemonName}<span style=" background-color:${pokemonColor.color}">${id}</span></h1>
         <div class="types">${typesDiv}</div>
         <p class="pokemon-description" style="color:${pokemonColor.color}">
           ${description}
