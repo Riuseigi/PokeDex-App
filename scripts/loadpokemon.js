@@ -16,6 +16,7 @@ function hideLoader() {
 async function fetchAndDisplayPokemons(page){
   try {
     showLoader();
+    loadMoreBtn.style.display = "none";
     const startIndex = (page - 1) * pokemonPerPage + 1;
     const endIndex = startIndex + pokemonPerPage - 1;
    
@@ -27,6 +28,7 @@ async function fetchAndDisplayPokemons(page){
       displayCard(pokemon)
     })
     hideLoader();
+    loadMoreBtn.style.display = "block";
 } catch (error) {
 
     console.error('Error fetching and displaying pokemons:', error);
