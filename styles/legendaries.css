@@ -71,7 +71,7 @@ body{
   max-height: 400px;
   animation: jump 2s infinite;
   margin-right: 50px;
-  left:-200px;
+ 
   bottom: 30px;
 }
 
@@ -184,7 +184,7 @@ body{
 }
 .stats-label {
  
-  color: #F9CF30;
+ 
   font-family: var(--soureSansFont);
   
   margin-bottom: 10px;
@@ -268,6 +268,10 @@ font-family: var(--soureSansFont);
   .pokemonSprite{
     margin: 0;
     height: 340px;
+    position: relative;
+    left: 10%;
+  top: 20px;
+    overflow: auto;
   }
   .pokeballBG{
     top: 10%;
