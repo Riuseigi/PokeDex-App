@@ -1,6 +1,11 @@
 import { getPokemonInfo } from "./getPokemonInfo.js";
 import { getPokemonColors } from "./getPokemonColors.js";
 let legendaryPokemon = [];
+/**
+ * Asynchronously fetches a list of legendary Pokémon from the PokeAPI.
+ *
+ * @return {Array} A list of legendary Pokémon.
+ */
 async function fetchLegendaryPokemon() {
     const response = await fetch('https://pokeapi.co/api/v2/pokemon/?limit=1000');
     const data = await response.json();
@@ -45,6 +50,12 @@ getLegendaryPokemon()
 
 const navigationContainer = document.querySelector(".carousel-navigation")
 console.log(navigationContainer)
+/**
+ * Display Pokemon details in a formatted HTML carousel item.
+ *
+ * @param {Object} pokemon - The Pokemon object containing details such as name, attack, defense, speed, etc.
+ * @return {string} The formatted HTML for displaying Pokemon details.
+ */
 const displayPokemonDetails = (pokemon) => {
   const { 
     name, 
@@ -104,6 +115,14 @@ const displayPokemonDetails = (pokemon) => {
   return pokemonDetails;
 };
 
+/**
+ * Renders a stat with the given label, value, and color.
+ *
+ * @param {string} label - the label for the stat
+ * @param {string} value - the value of the stat
+ * @param {object} color - the color object containing color and backgroundColor properties
+ * @return {string} the HTML representation of the stat
+ */
 const renderStat = (label, value, color) => {
   return `
     <div class="stat">
@@ -116,6 +135,11 @@ const renderStat = (label, value, color) => {
     </div>`;
 };
 const carouselContainer = document.querySelector(".carousel-container");
+/**
+ * Asynchronously creates card navigation for legendary pokemons.
+ *
+ * @return {Promise<void>} A promise that resolves once the card navigation is created
+ */
 const createCardNavigation = async () => {
   const pokemons = await getLegendaryPokemon();
   pokemons.forEach(pokemon => {
@@ -167,6 +191,11 @@ navigationContainer.addEventListener('mouseup', endDrag);
 navigationContainer.addEventListener('mouseleave', endDrag);
 navigationContainer.addEventListener('touchend', endDrag);
 
+/**
+ * Handle the start of a drag event.
+ *
+ * @param {Event} event - the event object
+ */
 function startDrag(event) {
     if (event.type === 'touchstart') {
         startPos = event.touches[0].clientX;
@@ -177,6 +206,12 @@ function startDrag(event) {
     prevTranslate = currentTranslate;
 }
 
+/**
+ * Handles the drag event and updates the current translation based on the event type and position.
+ *
+ * @param {Event} event - The drag event object
+ * @return {void} 
+ */
 function drag(event) {
     if (isDragging) {
         let currentPosition;
@@ -190,12 +225,20 @@ function drag(event) {
     }
 }
 
+/**
+ * Sets the translate properties of the navigation container to create a scroll effect.
+ *
+ */
 function setTranslate() {
     navigationContainer.style.overflowX = 'hidden';
     navigationContainer.style.scrollBehavior = 'auto';
     navigationContainer.scrollLeft = -currentTranslate;
 }
 
+/**
+ * Ends the drag operation and updates the state.
+ *
+ */
 function endDrag() {
     isDragging = false;
     prevTranslate = currentTranslate;
@@ -205,9 +248,17 @@ function endDrag() {
 //Carousel Effect
 
 // Previous and Next button functionality
+let cryAudio;
 const prevBtn = document.querySelector(".prev");
 const nextBtn = document.querySelector(".next");
 let currentPage = 0;
+
+/**
+ * Updates the display with details of the current legendary Pokemon.
+ *
+ * @param None
+ * @return None
+ */
 const updateDisplay = () => {
   const display = displayPokemonDetails(legendaryPokemon[currentPage]);
   carouselContainer.innerHTML = display;
@@ -216,6 +267,7 @@ const updateDisplay = () => {
 prevBtn.addEventListener("click", () => {
   if (currentPage > 0) {
     currentPage--;
+    if (cryAudio) cryAudio.pause();
     updateDisplay();
   }
 });
@@ -224,6 +276,7 @@ nextBtn.addEventListener("click", () => {
   if (currentPage < legendaryPokemon.length - 1) {
     currentPage++;
     updateDisplay();
+    if (cryAudio) cryAudio.play();
   }
 });
 
