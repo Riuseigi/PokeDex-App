@@ -46,150 +46,100 @@ getLegendaryPokemon()
 
 const navigationContainer = document.querySelector(".carousel-navigation")
 console.log(navigationContainer)
+const displayPokemonDetails = (pokemon) => {
+  const { 
+    name, 
+    attack, 
+    defense, 
+    speed, 
+    specialAttack, 
+    specialDefense, 
+    frontDefaultSprite, 
+    id, 
+    description, 
+    types,
+  } = pokemon;
+
+  const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+  const firstType = types[0];
+  const pokemonColor = getPokemonColors(firstType);
+  
+  const typesDiv = types.map((type) => {
+    const color = getPokemonColors(type);
+    return `<div class="type" style="background-color:${color.color};">${type}</div>`;
+  }).join(" ");
+
+  const pokemonDetails = `
+    <div class="carousel-item">
+      <div class="pokemonSprite-container">
+        <img
+          src="./img/pokeball-background.svg"
+          alt=""
+          class="pokeballBG"
+        />
+        <img
+          src="${frontDefaultSprite}"
+          alt="Pokemon 1"
+          class="pokemonSprite"
+        />
+      </div>
+      <div class="pokemonInfo">
+        <h1 class="pokemonName">${formattedName}<span style=" background-color:${pokemonColor.color}">${id}</span></h1>
+        <div class="types">${typesDiv}</div>
+        <p class="pokemon-description" style="color:${pokemonColor.color}">
+          ${description}
+        </p>
+        <div class="base-stats">
+          ${renderStat('ATK', attack, pokemonColor)}
+          ${renderStat('DEF', defense, pokemonColor)}
+          ${renderStat('SPD', speed, pokemonColor)}
+          ${renderStat('SATK', specialAttack, pokemonColor)}
+          ${renderStat('SDEF', specialDefense, pokemonColor)}
+        </div>
+      </div>
+    </div>`;
+
+  return pokemonDetails;
+};
+
+const renderStat = (label, value, color) => {
+  return `
+    <div class="stat">
+      <div class="stats-label" style="color:${color.color}">
+        ${label} <span>${value}</span>
+      </div>
+      <div class="bar" style="background-color:${color.backgroundColor}">
+        <div class="progress" style="width: ${value}%; background-color: ${color.color};"></div>
+      </div>
+    </div>`;
+};
+
 const createCardNavigation = async (pokemon) =>{
-    const pokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
-    const spriteUrl = pokemon.spriteUrl;
-     //Initialize all the pokemonData comes from pokeAPI
-     const attack = pokemon.attack;
-     const defense = pokemon.defense;
-     const speed = pokemon.speed;
-     const specialAttack = pokemon.specialAttack;
-     const specialDefense = pokemon.specialDefense;
-    const artworkImage = pokemon.frontDefaultSprite;
-     const id = pokemon.id;
-     const description = pokemon.description;
-     const pokemonCry  = pokemon.cry;
-     const pokemonWeight = pokemon.weight;
-     const pokemonHeight = pokemon.height;
-     const firstType = pokemon.types[0]; // Assuming types is an array of type strings
-     const pokemonColor = getPokemonColors(firstType);
-     const specialMove = pokemon.specialMove.charAt(0).toUpperCase() + pokemon.specialMove.slice(1).replace(/-/g, ' ');
-     const cryAudio = new Audio(pokemonCry);
-     // this takes the color of the types and return a div element
-     const typesDiv = pokemon.types.map((element) => {
-       const type = document.createElement("div")
-       type.textContent = element;
-       
-       const color = getPokemonColors(element)
-       type.style.backgroundColor = color;
-       return `<div class="type" style="background-color:${color.color};">${element}</div>`
-   }).join(" ");
-    const pokemonCardContent = document.createElement("div");
-    pokemonCardContent.classList.add("pokemonCard")
-    const cardContentInnerHtml = `
+  const { name, spriteUrl, cry } = pokemon;
+  const pokemonName = name.charAt(0).toUpperCase() + name.slice(1);
+
+
+  const pokemonCardContent = document.createElement("div");
+  pokemonCardContent.classList.add("pokemonCard")
+  const cardContentInnerHtml = `
     <div class="imageContainer">
       <img src="${spriteUrl}" alt="" draggable="false"/>
     </div>
     <div class="pokemonNameCard"><span>${pokemonName}</span></div>
     `
-    pokemonCardContent.innerHTML = cardContentInnerHtml;
+  pokemonCardContent.innerHTML = cardContentInnerHtml;
 
-    navigationContainer.appendChild(pokemonCardContent)
+  navigationContainer.appendChild(pokemonCardContent);
 
-    pokemonCardContent.addEventListener("click",() => {
-      const carouselContainer = document.querySelector(".carousel-container")
-    cryAudio.play()
-      const carouselItemContent = `<div class="carousel-item">
-      <div class="pokemonSprite-container">
-        <img
-          src="./img/pokeball-background.svg"
-          alt=""
-          
-          class="pokeballBG"
-        />
-        <img
-          src="${artworkImage}"
-          alt="Pokemon 1"
-          class="pokemonSprite"
-        />
-      </div>
-
-      <div class="pokemonInfo">
-       
-        <h1 class="pokemonName">${pokemonName}<span style=" background-color:${pokemonColor.color}">${id}</span></h1>
-        <div class="types">${typesDiv}</div>
-        <p class="pokemon-description" style="color:${pokemonColor.color}">
-          ${description}
-        </p>
-
-        <div class="base-stats">
-          <div class="stat">
-            <div class="stats-label" style="color:${pokemonColor.color}">
-              ATK <span>${attack}</span>
-            </div>
-            <div
-              class="bar"
-              style="background-color:${pokemonColor.backgroundColor}"
-            >
-              <div
-                class="progress"
-                style="width: ${attack}%; background-color: ${pokemonColor.color};"
-              ></div>
-            </div>
-          </div>
-          <div class="stat">
-            <div class="stats-label" style="color:${pokemonColor.color}">
-              DEF <span>${defense}</span>
-            </div>
-            <div
-              class="bar"
-              style="background-color:${pokemonColor.backgroundColor}"
-            >
-              <div
-                class="progress"
-                style="width: ${defense}%; background-color: ${pokemonColor.color};"
-              ></div>
-            </div>
-          </div>
-          <div class="stat">
-            <div class="stats-label" style="color:${pokemonColor.color}">
-              SPD <span>${speed}</span>
-            </div>
-            <div
-              class="bar"
-              style="background-color:${pokemonColor.backgroundColor}"
-            >
-              <div
-                class="progress"
-                style="width: ${speed}%; background-color: ${pokemonColor.color};"
-              ></div>
-            </div>
-          </div>
-          <div class="stat">
-            <div class="stats-label" style="color:${pokemonColor.color}">
-              SATK <span>${specialAttack}</span>
-            </div>
-            <div
-              class="bar"
-              style="background-color:${pokemonColor.backgroundColor}"
-            >
-              <div
-                class="progress"
-                style="width: ${specialAttack}%; background-color: ${pokemonColor.color};"
-              ></div>
-            </div>
-          </div>
-          <div class="stat">
-            <div class="stats-label" style="color:${pokemonColor.color}">
-              SDEF <span>${specialDefense}</span>
-            </div>
-            <div
-              class="bar"
-              style="background-color:${pokemonColor.backgroundColor}"
-            >
-              <div
-                class="progress"
-                style="width: ${specialDefense}%; background-color: ${pokemonColor.color};"
-              ></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>`
+  pokemonCardContent.addEventListener("click", () => {
+    const carouselContainer = document.querySelector(".carousel-container");
+    const carouselItemContent = displayPokemonDetails(pokemon);
     carouselContainer.innerHTML = carouselItemContent;
-    })
-    
-}
+    const cryAudio = new Audio(cry);
+    cryAudio.play();
+  });
+};
+
 
 
 let isDragging = false;
