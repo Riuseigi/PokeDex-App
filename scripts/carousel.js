@@ -94,7 +94,7 @@ const createCardNavigation = async (pokemon) =>{
         <img
           src="./img/pokeball-background.svg"
           alt=""
-          srcset="pokeball Backgrounnd"
+          
           class="pokeballBG"
         />
         <img
@@ -188,7 +188,7 @@ const createCardNavigation = async (pokemon) =>{
     </div>`
     carouselContainer.innerHTML = carouselItemContent;
     })
-    cryAudio.stop()
+    
 }
 
 
@@ -241,4 +241,6 @@ function endDrag() {
     prevTranslate = currentTranslate;
     navigationContainer.style.scrollBehavior = 'smooth';
 }
+
+//initialize the pokemon
 
