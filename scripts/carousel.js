@@ -1,5 +1,6 @@
 import { getPokemonInfo } from "./getPokemonInfo.js";
 import { getPokemonColors } from "./getPokemonColors.js";
+let legendaryPokemon = [];
 async function fetchLegendaryPokemon() {
     const response = await fetch('https://pokeapi.co/api/v2/pokemon/?limit=1000');
     const data = await response.json();
@@ -56,6 +57,7 @@ const displayPokemonDetails = (pokemon) => {
     id, 
     description, 
     types,
+    cry 
   } = pokemon;
 
   const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
@@ -96,7 +98,9 @@ const displayPokemonDetails = (pokemon) => {
         </div>
       </div>
     </div>`;
-
+    const cryAudio = new Audio(cry);
+    cryAudio.play();
+    
   return pokemonDetails;
 };
 
@@ -111,38 +115,41 @@ const renderStat = (label, value, color) => {
       </div>
     </div>`;
 };
-
-const createCardNavigation = async () =>{
-
+const carouselContainer = document.querySelector(".carousel-container");
+const createCardNavigation = async () => {
   const pokemons = await getLegendaryPokemon();
   pokemons.forEach(pokemon => {
-    const { name, spriteUrl, cry } = pokemon;
-  const pokemonName = name.charAt(0).toUpperCase() + name.slice(1);
+    const { name, spriteUrl,} = pokemon;
+    const pokemonName = name.charAt(0).toUpperCase() + name.slice(1);
 
+    const pokemonCardContent = document.createElement("div");
+    pokemonCardContent.classList.add("pokemonCard");
+    pokemonCardContent.dataset.pokemon = JSON.stringify(pokemon); // Store the pokemon object as a data attribute
+    const cardContentInnerHtml = `
+      <div class="imageContainer">
+        <img src="${spriteUrl}" alt="" draggable="false"/>
+      </div>
+      <div class="pokemonNameCard"><span>${pokemonName}</span></div>
+    `;
+    pokemonCardContent.innerHTML = cardContentInnerHtml;
 
-  const pokemonCardContent = document.createElement("div");
-  pokemonCardContent.classList.add("pokemonCard")
-  const cardContentInnerHtml = `
-    <div class="imageContainer">
-      <img src="${spriteUrl}" alt="" draggable="false"/>
-    </div>
-    <div class="pokemonNameCard"><span>${pokemonName}</span></div>
-    `
-  pokemonCardContent.innerHTML = cardContentInnerHtml;
+    navigationContainer.appendChild(pokemonCardContent);
 
-  navigationContainer.appendChild(pokemonCardContent);
+    pokemonCardContent.addEventListener("click", (event) => {
+      // Find the index of the clicked Pokemon in legendaryPokemon array
+      const clickedPokemon = JSON.parse(event.currentTarget.dataset.pokemon);
 
-  pokemonCardContent.addEventListener("click", () => {
-    const carouselContainer = document.querySelector(".carousel-container");
-    const carouselItemContent = displayPokemonDetails(pokemon);
-    carouselContainer.innerHTML = carouselItemContent;
-    const cryAudio = new Audio(cry);
-    cryAudio.play();
+      // Update the currentPage to the index of the clicked Pokemon
+      const clickedIndex = legendaryPokemon.findIndex(pokemon => pokemon.name === clickedPokemon.name);
+      currentPage = clickedIndex;
+      // Update the display with the clicked Pokemon details
+      const carouselItemContent = displayPokemonDetails(clickedPokemon);
+      carouselContainer.innerHTML = carouselItemContent;
+    
+    });
   });
-  });
-  
 };
-createCardNavigation()
+createCardNavigation();
 
 
 let isDragging = false;
@@ -197,31 +204,39 @@ function endDrag() {
 
 //Carousel Effect
 
-
+// Previous and Next button functionality
 const prevBtn = document.querySelector(".prev");
 const nextBtn = document.querySelector(".next");
 let currentPage = 0;
-let legendaryPokemon = [];
-prevBtn.addEventListener("click", async () => {
+const updateDisplay = () => {
+  const display = displayPokemonDetails(legendaryPokemon[currentPage]);
+  carouselContainer.innerHTML = display;
+};
+
+prevBtn.addEventListener("click", () => {
   if (currentPage > 0) {
     currentPage--;
-    displayPokemonDetails(legendaryPokemon[currentPage]);
+    updateDisplay();
   }
 });
 
-nextBtn.addEventListener("click", async () => {
+nextBtn.addEventListener("click", () => {
   if (currentPage < legendaryPokemon.length - 1) {
     currentPage++;
-    displayPokemonDetails(legendaryPokemon[currentPage]);
+    updateDisplay();
   }
 });
 
-// Example usage
-
-
+// Fetch and display legendary Pokemon
 async function loadLegendaryPokemon() {
-  legendaryPokemon = await getLegendaryPokemon();
-  displayPokemonDetails(legendaryPokemon[currentPage]);
+  try {
+    legendaryPokemon = await getLegendaryPokemon();
+    updateDisplay();
+  } catch (error) {
+    console.error(`Can't load the pokemon: ${error}`);
+  }
 }
+
+// Fetch and display legendary Pokemon
 
 loadLegendaryPokemon();
