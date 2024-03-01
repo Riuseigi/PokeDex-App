@@ -28,16 +28,14 @@ async function fetchLegendaryPokemon() {
 
 // Example usage
 async function getLegendaryPokemon() {
-    const legendaryPokemon = await fetchLegendaryPokemon();
-    const promises = legendaryPokemon.map(async (pokemon) => {
-        const pokemonData = await getPokemonInfo(pokemon.name);
-        return pokemonData;
-    });
-    const pokemonDetails = await Promise.all(promises);
-    pokemonDetails.forEach(pokemonDetails =>{
-        createCardNavigation(pokemonDetails)
+  const legendaryPokemon = await fetchLegendaryPokemon();
+  const promises = legendaryPokemon.map(async (pokemon) => {
+    const pokemonData = await getPokemonInfo(pokemon.name);
+    return pokemonData;
+  });
 
-    })
+  const pokemonDetails = await Promise.all(promises);
+  return pokemonDetails;
 }
 getLegendaryPokemon()
 
@@ -114,8 +112,11 @@ const renderStat = (label, value, color) => {
     </div>`;
 };
 
-const createCardNavigation = async (pokemon) =>{
-  const { name, spriteUrl, cry } = pokemon;
+const createCardNavigation = async () =>{
+
+  const pokemons = await getLegendaryPokemon();
+  pokemons.forEach(pokemon => {
+    const { name, spriteUrl, cry } = pokemon;
   const pokemonName = name.charAt(0).toUpperCase() + name.slice(1);
 
 
@@ -138,8 +139,10 @@ const createCardNavigation = async (pokemon) =>{
     const cryAudio = new Audio(cry);
     cryAudio.play();
   });
+  });
+  
 };
-
+createCardNavigation()
 
 
 let isDragging = false;
@@ -192,5 +195,33 @@ function endDrag() {
     navigationContainer.style.scrollBehavior = 'smooth';
 }
 
-//initialize the pokemon
+//Carousel Effect
 
+
+const prevBtn = document.querySelector(".prev");
+const nextBtn = document.querySelector(".next");
+let currentPage = 0;
+let legendaryPokemon = [];
+prevBtn.addEventListener("click", async () => {
+  if (currentPage > 0) {
+    currentPage--;
+    displayPokemonDetails(legendaryPokemon[currentPage]);
+  }
+});
+
+nextBtn.addEventListener("click", async () => {
+  if (currentPage < legendaryPokemon.length - 1) {
+    currentPage++;
+    displayPokemonDetails(legendaryPokemon[currentPage]);
+  }
+});
+
+// Example usage
+
+
+async function loadLegendaryPokemon() {
+  legendaryPokemon = await getLegendaryPokemon();
+  displayPokemonDetails(legendaryPokemon[currentPage]);
+}
+
+loadLegendaryPokemon();
