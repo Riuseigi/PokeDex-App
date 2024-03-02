@@ -310,7 +310,7 @@ body{
   border: 1px solid #888;
   border-radius: 15px;
   width: 100%; /* 80% of the viewport width */
-  max-width: 95%; /* Maximum width of 95% of the viewport width */
+  max-width: 90%; /* Maximum width of 95% of the viewport width */
   position: relative;
   animation: fadeIn 0.3s ease;
 }
@@ -326,25 +326,23 @@ body{
 .modal-content__card{
   column-gap: 40px;
   display: grid;
- 
   align-items: center;
   flex-wrap: wrap;
+ 
 }
 .modal-content__imageSprite{
- 
   right: 10%;
-  bottom: 20%;
+  bottom: 30%;
   display: flex;
   justify-content: center;
   background-color: inherit;
-  
-  height: 350px;
+  height: 250px;
 }
 .modal-content__imageSprite .pokemon{
   z-index: 2;
   position: absolute;
-  max-height: 400px;
-  top: 3%;
+  max-height: 300px;
+  top: 0;
  -webkit-filter: drop-shadow(1px 1px 0 black)
                   drop-shadow(-1px -1px 0 black);
   filter: drop-shadow(1px 1px 0 rgb(156, 150, 150)) 
