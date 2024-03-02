@@ -1,93 +1,68 @@
-const pokemonContainer = document.getElementById("pokemonContainer");
 import { getPokemonColors } from './getPokemonColors.js';
-//Display the pokemon in Card and Modal
-export async function displayCard(pokemonData){
-   
+
+const pokemonContainer = document.getElementById("pokemonContainer");
+
+export async function displayCard(pokemonData) {
   try {
-   
+    //use Destructuring to get the properties from the pokemonData object
+    const { name, attack, defense, speed, specialAttack, specialDefense, frontDefaultSprite: spriteUrl, id, description, cry: pokemonCry, weight: pokemonWeight, height: pokemonHeight, types, specialMove } = pokemonData;
+
+    // create the pokemonCard
     const pokemonCard = document.createElement('div');
+    // add class
     pokemonCard.classList.add("pokemonCard");
-  
-    const pokemonName = pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1);
-    //Initialize all the pokemonData comes from pokeAPI
-    const attack = pokemonData.attack;
-    const defense = pokemonData.defense;
-    const speed = pokemonData.speed;
-    const specialAttack = pokemonData.specialAttack;
-    const specialDefense = pokemonData.specialDefense;
-    const spriteUrl = pokemonData.frontDefaultSprite;
-    const id = pokemonData.id;
-    const description = pokemonData.description;
-    const pokemonCry  = pokemonData.cry;
-    const pokemonWeight = pokemonData.weight;
-    const pokemonHeight = pokemonData.height;
-    const firstType = pokemonData.types[0]; // Assuming types is an array of type strings
+    // make first letter uppercase
+    const pokemonName = name.charAt(0).toUpperCase() + name.slice(1);
+    // get first type
+    const firstType = types[0];
+    // get pokemon colors
     const pokemonColor = getPokemonColors(firstType);
-    const specialMove = pokemonData.specialMove.charAt(0).toUpperCase() + pokemonData.specialMove.slice(1).replace(/-/g, ' ');
-
-    // this takes the color of the types and return a div element
-    const typesDiv = pokemonData.types.map((element) => {
-      const type = document.createElement("div")
-      type.textContent = element;
-      type.classList.add("type1")
-      const color = getPokemonColors(element)
-      type.style.backgroundColor = color;
-      return `<div class="type" style="background-color:${color.color};">${element}</div>`
-  }).join(" ");
-  
-  
-    // Card Content
-    const pokemonCardInnerHTML= ` <div class="pokemon-info">
-    <div class="pokemon-stats">
-      <h2 id="pokemonName">${pokemonName}</h2>
-
-      <div class="attack_container">
-        <div><p id="pokemonAttack">${attack}</p></div>
-        <p>Attack</p>
+    // get types to apply on the type container
+    const typesDiv = types.map((element) => {
+      const color = getPokemonColors(element);
+      return `<div class="type" style="background-color:${color.color};">${element}</div>`;
+    }).join(" ");
+    // content of the card and apply the data attributes
+    const pokemonCardInnerHTML = `
+      <div class="pokemon-info">
+        <div class="pokemon-stats">
+          <h2 id="pokemonName">${pokemonName}</h2>
+          <div class="attack_container">
+            <div><p id="pokemonAttack">${attack}</p></div>
+            <p>Attack</p>
+          </div>
+          <div class="defense_container">
+            <div id="pokemonDefense">${defense}</div>
+            <p>Defense</p>
+          </div>
+          <div class="types" id="pokemonTypes">
+            ${typesDiv}
+          </div>
+        </div>
       </div>
-      <div class="defense_container">
-        <div id="pokemonDefense">${defense}</div>
-        <p>Defense</p>
-      </div>
-      <div class="types" id="pokemonTypes">
-      ${typesDiv}
-      </div>
-    </div>
-    </div>
-    <div class="pokemon_image">
-    <img src="${spriteUrl}" alt="pokemon sprite" id="pokemonSprite" />
-    </div>`
+      <div class="pokemon_image">
+        <img src="${spriteUrl}" alt="pokemon sprite" id="pokemonSprite" />
+      </div>`;
+    // add the animation using AOS
+    pokemonCard.innerHTML = pokemonCardInnerHTML;
+    pokemonCard.setAttribute("data-aos", "fade-up");
 
-    pokemonCard.innerHTML  = pokemonCardInnerHTML;
-
-    // PokemonCard set animation
-    pokemonCard.setAttribute("data-aos","fade-up");
-
-    //Modal Card
-    pokemonCard.addEventListener("click",() => {
-      var modal = document.getElementById("myModal");
-
-      // not iterate the pokemon modal
+    // create the modal when clicked the specific card
+    pokemonCard.addEventListener("click", () => {
+     
+      const modal = document.getElementById("myModal");
+      //reset the modal
       modal.innerHTML = "";
-
-      // create modal card Element
+      //create modalCard
       const modalCard = document.createElement("div");
       modalCard.classList.add("modal-content");
       modal.appendChild(modalCard);
-      
-      //add the pokemon sound
-      const cryAudio = new Audio(pokemonCry);
-      //dipslay the pokemon type and apply according to type
-      const typesDivModal = pokemonData.types.map((element) => {
-        const type = document.createElement("div");
-        type.textContent = element;
-        type.classList.add("type1");
-        type.style.backgroundColor = pokemonColor.color;
+      //display the type div in the modal
+      const typesDivModal = types.map((element) => {
         const color = getPokemonColors(element);
         return `<div class="modal-type" style="background-color:${color.color};">${element}</div>`;
       }).join(" ");
-    
-      //add content of my modal and apply the pokemon Data
+      // content of the modal 
       const modalContent = `
         <span class="close">&times;</span>
         <div class="modal-content__card">
@@ -151,20 +126,17 @@ export async function displayCard(pokemonData){
           </div>
         </div>
       `;
-      
-      // display the modal also play the pokemon sound
+      //display the modal
       modal.style.display = "block";
       document.body.style.overflow = "hidden";
+      // add cry audio for pokemon
+      const cryAudio = new Audio(pokemonCry);
       cryAudio.play();
       cryAudio.volume = 0.5;
-    
+      // set the content of the modal
       modalCard.innerHTML = modalContent;
-      // set the background according to the pokemon type
       modalCard.style.backgroundColor = pokemonColor.color;
-    
-
-
-      //close btn
+      //close the modal
       const closeBtn = modal.querySelector(".close");
       closeBtn.addEventListener("click", function() {
         modal.style.display = "none";
@@ -172,22 +144,17 @@ export async function displayCard(pokemonData){
         cryAudio.pause();
       });
     });
-    //this function is for animation on displaying the card
+    // call the AOS animation
     AOS.init();
-   
-    
-    
+    // add background color to the pokemon card depending on their type
     pokemonCard.style.background = `linear-gradient(to right, #F6F7F9 59%, ${pokemonColor.color} 50%)`;
-
-    //Validate the pokemon Card
+    //validate and append the pokemon card
     if (pokemonContainer) {
       pokemonContainer.appendChild(pokemonCard);
     } else {
       console.error("pokemonContainer not found");
     }
   } catch (error) {
-      console.error(`Can fetch the Data :${error}`)
-      
-
+    console.error(`Can't fetch the Data: ${error}`);
   }
 }
