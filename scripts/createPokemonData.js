@@ -1,6 +1,7 @@
 // create the pokemonData within this function
 export async function createPokemonData(data) {
     try {
+      // create the pokemonData
       const pokemonData = {
         name: data.name,
         id: data.id,
@@ -23,7 +24,7 @@ export async function createPokemonData(data) {
       } else {
         pokemonData.specialMove = "Unknown"; // or any default value
       }
-    
+      // get pokemon description
       const speciesUrl = data.species.url;
       const speciesResponse = await fetch(speciesUrl);
       const speciesData = await speciesResponse.json();
@@ -31,6 +32,8 @@ export async function createPokemonData(data) {
       const cleanedDescription = description.replace(/[\u0000-\u001F]/g, ' ');
       pokemonData.description = cleanedDescription;
       
+
+      // get pokemon description
       return pokemonData;
     } catch (error) {
       console.error(`Cant create pokemon data: ${error}`)

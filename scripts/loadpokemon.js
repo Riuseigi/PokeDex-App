@@ -2,8 +2,13 @@
 import { getPokemonInfo } from './getPokemonInfo.js';
 import { displayCard } from './displayCard.js';
 const loader = document.getElementById('loader');
+//load pokemon per page
 const pokemonPerPage = 30;
 let currentPage = 1;
+/**
+ * Display the loader element.
+ *
+ */
 function showLoader() {
   loader.style.display = 'block';
 }
