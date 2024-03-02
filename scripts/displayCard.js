@@ -83,7 +83,8 @@ export async function displayCard(pokemonData){
         type.textContent = element;
         type.classList.add("type1");
         type.style.backgroundColor = pokemonColor.color;
-        return `<div class="modal-type" style="background-color:${pokemonColor.color};">${element}</div>`;
+        const color = getPokemonColors(element);
+        return `<div class="modal-type" style="background-color:${color.color};">${element}</div>`;
       }).join(" ");
     
       //add content of my modal and apply the pokemon Data
