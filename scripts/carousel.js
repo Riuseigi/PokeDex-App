@@ -111,6 +111,7 @@ const displayPokemonDetails = (pokemon) => {
     </div>`;
     const cryAudio = new Audio(cry);
     cryAudio.play();
+    cryAudio.volume = 0.3;
     
   return pokemonDetails;
 };

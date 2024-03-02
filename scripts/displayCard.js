@@ -155,6 +155,7 @@ export async function displayCard(pokemonData){
       modal.style.display = "block";
       document.body.style.overflow = "hidden";
       cryAudio.play();
+      cryAudio.volume = 0.5;
     
       modalCard.innerHTML = modalContent;
       // set the background according to the pokemon type
