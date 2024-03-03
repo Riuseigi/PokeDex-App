@@ -70,6 +70,7 @@ body{
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s;
+  color: white;
 }
 .hero-section__button:hover{
   background: #87e78b;
@@ -241,6 +242,8 @@ footer span {
     font-size: 16px; /* Adjust font size for smaller screens */
     padding: 12px 24px; /* Adjust padding for smaller screens */
     width:100%;
+    margin-top: 10px;
+    color: white;
   }
 
   .hero-section__banner{
