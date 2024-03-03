@@ -243,12 +243,10 @@ footer span {
     padding: 12px 24px; /* Adjust padding for smaller screens */
     width:100%;
     margin-top: 10px;
-    color: white;
+ 
   }
 
-  .hero-section__banner{
-    
-  }
+
   .hero-section__banner .pokeball2 img{
     width: 100px;
     height: 100px;
