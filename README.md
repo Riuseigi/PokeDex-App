@@ -41,4 +41,3 @@ This web application serves as a comprehensive PokeDex, providing an intuitive a
 - Utilize version control (e.g., Git) to track changes and manage different versions of your project.
 - Write clean and well-commented code for maintainability and collaboration.
 
-By following these outlined steps and continuously refining your code, you can create a comprehensive and engaging PokeDex website app for Pokemon enthusiasts. Remember to tailor the features and complexity of the project to your skill level and available time.
