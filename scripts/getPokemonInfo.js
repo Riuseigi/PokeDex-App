@@ -1,5 +1,6 @@
-import { createPokemonData } from './createPokemonData.js';
-import { fetchPokemonData } from './fetchDataUrl.js';
+import { createPokemonData } from "./createPokemonData.js";
+import { displayErrorImage } from "./displayErrorMessage.js";
+import { fetchPokemonData } from "./fetchDataUrl.js";
 
 /**
  * Returns a pokemon data of a specific pokemon.
@@ -17,12 +18,11 @@ export async function getPokemonInfo(id) {
     const data = await fetchPokemonData(url);
     const pokemonData = await createPokemonData(data);
     pokemonCache.set(id, pokemonData);
-    
+
     return pokemonData;
   } catch (error) {
-    console.error('Error fetching Pokemon info:', error);
+    console.error("Error fetching Pokemon info:", error);
+
     throw error;
   }
 }
-  
-  
