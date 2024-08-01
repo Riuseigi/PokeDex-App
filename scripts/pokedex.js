@@ -31,10 +31,12 @@ async function pokemonFilter(pokemonType) {
   pokemonContainer.innerHTML = "";
   loadMoreBtn.style.display = "none";
   pokemonNames.length = 0;
+
   showLoader();
   console.log(showLoader);
 
   try {
+    pokemonTypeFilter.disabled = true;
     let url = `https://pokeapi.co/api/v2/pokemon?limit=2000`;
 
     const data = await fetchPokemonData(url);
@@ -70,6 +72,8 @@ async function pokemonFilter(pokemonType) {
     );
   } catch (error) {
     console.error("Error filtering Pokemons:", error);
+  } finally {
+    pokemonTypeFilter.disabled = false;
   }
 }
 
