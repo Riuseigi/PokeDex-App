@@ -35,7 +35,7 @@
         <form class="filteration">
           <input type="text" id="searchPokemon" />
           <label for="pokemon-type">Pokemon Type:</label>
-          <select id="pokemonTypeFilter" name="pokemon-type">
+          <select id="pokemonTypeFilter" name="pokemon-type" disabled>
             <option value="normal">Normal</option>
             <option value="fire">Fire</option>
             <option value="water">Water</option>
@@ -59,7 +59,7 @@
         </form>
       </div>
       <div class="pokemons-container" id="pokemonContainer">
-        <div class="loader" id="loader"></div>
+        <div class="loader" id="loader" style="display: none;"></div> 
 
       </div>
       <div id="myModal" class="modal">
