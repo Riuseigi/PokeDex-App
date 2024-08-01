@@ -3,6 +3,7 @@ import { getPokemonInfo } from "./getPokemonInfo.js";
 import { displayHeader } from "./displayHeaderText.js";
 import { displayCard } from "./displayCard.js";
 import { initializePokedex } from "./loadpokemon.js";
+import { showLoader } from "./loader.js";
 
 //Call the function to display the Header
 displayHeader();
@@ -28,29 +29,45 @@ const pokemonNames = [];
  */
 async function pokemonFilter(pokemonType) {
   pokemonContainer.innerHTML = "";
+  loadMoreBtn.style.display = "none";
   pokemonNames.length = 0;
+  showLoader();
+  console.log(showLoader);
+
   try {
     let url = `https://pokeapi.co/api/v2/pokemon?limit=2000`;
 
     const data = await fetchPokemonData(url);
+
+    if (!data || !data.results) {
+      throw new Error("Invalid response from the server.");
+    }
+
     const allPokemon = data.results;
+
+    if (allPokemon.length === 0) {
+      console.warn("No Pokémon found.");
+      return;
+    }
 
     // Filter Pokemon by type
     await Promise.all(
       allPokemon.map(async (pokemon) => {
         const id = pokemon.url.split("/").slice(-2, -1)[0];
-        const pokemonData = await getPokemonInfo(id);
-        const hasDesiredType =
-          pokemonData.types &&
-          pokemonData.types.some((type) => type === pokemonType);
+        try {
+          const pokemonData = await getPokemonInfo(id);
+          const hasDesiredType =
+            pokemonData.types &&
+            pokemonData.types.some((type) => type === pokemonType);
 
-        if (hasDesiredType || pokemonType === "all") {
-          displayCard(pokemonData);
+          if (hasDesiredType || pokemonType === "all") {
+            displayCard(pokemonData);
+          }
+        } catch (error) {
+          console.error(`Error fetching data for Pokémon ID ${id}:`, error);
         }
       })
     );
-
-    loadMoreBtn.style.display = "none";
   } catch (error) {
     console.error("Error filtering Pokemons:", error);
   }
