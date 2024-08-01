@@ -89,6 +89,7 @@ let legendaryPokemon = [];
  */
 async function fetchLegendaryPokemon() {
   const response = await fetch("https://pokeapi.co/api/v2/pokemon/?limit=1000");
+
   const data = await response.json();
   const legendaryPokemon = data.results.filter((pokemon) =>
     legendaryNames.includes(pokemon.name)
@@ -108,6 +109,10 @@ async function fetchLegendaryPokemon() {
  */
 async function getLegendaryPokemon() {
   const legendaryPokemon = await fetchLegendaryPokemon();
+  if (legendaryPokemon.length === 0) {
+    console.error("No legendary Pokémon data found.");
+    return []; // Return an empty array if no data is found
+  }
   const promises = legendaryPokemon.map(async (pokemon) => {
     const pokemonData = await getPokemonInfo(pokemon.name);
     return pokemonData;
@@ -115,7 +120,6 @@ async function getLegendaryPokemon() {
   const pokemonDetails = await Promise.all(promises);
   return pokemonDetails;
 }
-
 /**
  * Display Pokemon details in a formatted HTML carousel item.
  *
