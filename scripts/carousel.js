@@ -108,24 +108,33 @@ async function fetchLegendaryPokemon() {
  * @return {Array} A list of legendary Pokémon with detailed information.
  */
 async function getLegendaryPokemon() {
-  const legendaryPokemon = await fetchLegendaryPokemon();
-  if (legendaryPokemon.length === 0) {
-    console.error("No legendary Pokémon data found.");
-    return []; // Return an empty array if no data is found
+  try {
+    const legendaryPokemon = await fetchLegendaryPokemon();
+    if (legendaryPokemon.length === 0) {
+      console.error("No legendary Pokémon data found.");
+      return [];
+    }
+
+    const promises = legendaryPokemon.map(async (pokemon) => {
+      try {
+        const pokemonData = await getPokemonInfo(pokemon.name);
+        return pokemonData;
+      } catch (error) {
+        console.error(
+          `Error fetching detailed info for ${pokemon.name}:`,
+          error
+        );
+        return null;
+      }
+    });
+
+    const pokemonDetails = await Promise.all(promises);
+    return pokemonDetails.filter((pokemon) => pokemon !== null); // Filter out null results
+  } catch (error) {
+    console.error("Error getting legendary Pokémon:", error);
+    return [];
   }
-  const promises = legendaryPokemon.map(async (pokemon) => {
-    const pokemonData = await getPokemonInfo(pokemon.name);
-    return pokemonData;
-  });
-  const pokemonDetails = await Promise.all(promises);
-  return pokemonDetails;
 }
-/**
- * Display Pokemon details in a formatted HTML carousel item.
- *
- * @param {Object} pokemon - The Pokemon object containing details such as name, attack, defense, speed, etc.
- * @return {string} The formatted HTML for displaying Pokemon details.
- */
 function displayPokemonDetails(pokemon) {
   const {
     name,

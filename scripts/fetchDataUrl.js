@@ -10,10 +10,11 @@ export async function fetchPokemonData(url) {
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error("Network response was not ok.");
+      throw new Error(
+        `Network response was not ok. Status: ${response.status}`
+      );
     }
 
-    // Attempt to parse the raw response body as JSON
     const responseBody = await response.text();
     if (!responseBody) {
       throw new Error("Received an empty response from the server.");
@@ -22,6 +23,7 @@ export async function fetchPokemonData(url) {
     return JSON.parse(responseBody);
   } catch (error) {
     console.error("Error fetching data:", error);
+
     throw error;
   }
 }
