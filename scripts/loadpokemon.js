@@ -36,9 +36,17 @@ async function memoizedGetPokemonInfo(id) {
     return pokemonCache[id];
   }
 
-  const pokemonData = await getPokemonInfo(id);
-  pokemonCache[id] = pokemonData;
-  return pokemonData;
+  try {
+    const pokemonData = await getPokemonInfo(id);
+    if (!pokemonData || Object.keys(pokemonData).length === 0) {
+      throw new Error(`Received an empty response for Pokémon ID ${id}`);
+    }
+    pokemonCache[id] = pokemonData;
+    return pokemonData;
+  } catch (error) {
+    console.error(`Error fetching data for Pokémon ID ${id}:`, error);
+    return null; // Return null if there's an error fetching the Pokémon data
+  }
 }
 
 /**
@@ -57,8 +65,16 @@ async function fetchAndDisplayPokemons(page) {
       promises.push(memoizedGetPokemonInfo(i));
     }
 
-    (await Promise.all(promises)).forEach((pokemon) => {
-      displayCard(pokemon);
+    const pokemons = await Promise.all(promises);
+
+    pokemons.forEach((pokemon) => {
+      if (pokemon) {
+        displayCard(pokemon);
+      } else {
+        console.warn(
+          `Skipping Pokémon ID ${i} due to an error or empty response.`
+        );
+      }
     });
 
     hideLoader();
